@@ -1,10 +1,12 @@
+import logging
 import requests
 import json
 import os
-from dotenv import load_dotenv
 from logger import logger
 import re
-
+from aiogram import types
+from loader import dp
+from keyboards.keyboards import create_city_keyboard
 
 
 api = {'X-RapidApi-Key': os.getenv('API_KEY'), 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -38,6 +40,7 @@ async def city_info(name_city):
         if response.status_code == requests.codes.ok:
             logger.info(f'Function {city_info.__name__}, response.status_code == {requests.codes.ok}')
             full_names = [item['regionNames']['fullName'] for item in response.json()['sr']]
+            logging.info(full_names)
             return full_names
         else:
             raise ConnectionError
