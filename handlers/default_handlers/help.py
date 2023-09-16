@@ -7,4 +7,3 @@ from loader import dp
 async def bot_help(message: types.Message):
     await message.reply('Вот список доступных команд')
     await start_settings(message)
-
