@@ -1,10 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
-def create_city_keyboard(city_names):
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    buttons = [InlineKeyboardButton(city, callback_data=city) for city in city_names]
-    keyboard.add(*buttons)
+def get_locations(locations):
+    keyboard = InlineKeyboardMarkup()
+    for location in locations:
+        keyboard.add(InlineKeyboardButton(text=location, callback_data=f"location:{location}"))
     return keyboard
-
-

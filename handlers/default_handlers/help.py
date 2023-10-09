@@ -1,6 +1,6 @@
 from aiogram import types
 from handlers.default_handlers.start import start_settings
-from handlers.default_handlers.low import low_command
+from handlers.custom_handlers.low import low_command
 from loader import dp
 
 

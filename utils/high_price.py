@@ -37,4 +37,3 @@ async def city_info(name_city):
             raise ConnectionError
     except requests.ConnectionError:
         print('Error')
-
