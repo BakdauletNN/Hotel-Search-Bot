@@ -1,5 +1,5 @@
 from database import database
+from loader import bot
 
-
-async def launcher_database():
-    await database.db_start()
+def launcher_database():
+     database.db_start()

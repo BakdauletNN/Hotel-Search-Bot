@@ -1,9 +1,6 @@
 import requests
-import json
-import os
-import re
-import asyncio
 from config_data.config import API_KEY
+from loader import bot
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -21,7 +18,7 @@ def request_api(url, params, headers):
 class APIError(Exception):
     pass
 
-async def city_info(name_city):
+def city_info(name_city):
     url = "https://hotels4.p.rapidapi.com/locations/v3/search"
     querystring = {"q": name_city, "locale": "en_US", "langid": '1033', "siteid": '300000001'}
     headers = {
@@ -44,15 +41,13 @@ async def city_info(name_city):
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
 
-# async def main():
+# def main():
 #     try:
-#         result = await city_info('алматы')
+#         result = city_info('tokyo')
 #         print(result)
 #     except APIError as e:
 #         print(f'API Error: {str(e)}')
 #     except ConnectionError as e:
 #         print(f'Connection Error: {str(e)}')
 #
-# asyncio.run(main())
-#
-#
+# main()

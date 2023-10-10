@@ -5,7 +5,7 @@ db = sqlite3.connect('database/bot.db')
 cur = db.cursor()
 
 
-async def db_start():
+def db_start():
     cur.execute("CREATE TABLE IF NOT EXISTS accounts("
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "cart_id TEXT)")

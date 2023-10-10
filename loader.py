@@ -1,7 +1,6 @@
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import telebot
 from config_data import config
 
 
-bot = Bot(token=config.BOT_TOKEN)
-dp = Dispatcher(bot, storage=MemoryStorage())
+API_TOKEN = config.BOT_TOKEN
+bot = telebot.TeleBot(API_TOKEN)

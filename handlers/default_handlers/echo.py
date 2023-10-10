@@ -1,7 +1,7 @@
-from aiogram import types
-from loader import dp
+import telebot
+from loader import bot
 
 
-@dp.message_handler(state=None)
-async def echo_message(message: types.Message):
-    await message.reply("Эхо без состояния или фильтра.\n" f"Сообщение: {message.text}")
+@bot.message_handler(func=lambda message: True)
+def echo_message(message):
+    bot.send_message(message.chat.id, f"Эхо без состояния или фильтра.\nСообщение: {message.text}")

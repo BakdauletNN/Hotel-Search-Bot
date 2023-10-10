@@ -1,30 +1,24 @@
-from aiogram import types
-from loader import dp
-from keyboards.keyboards import get_locations
 from utils.low_price import city_info
+from keyboards.keyboards import get_locations
+from loader import bot
 
-@dp.message_handler(commands=['low'])
-async def low_command(message: types.Message):
-    # Отправляем пользователю сообщение и ожидаем ответа о городе
-    user = await message.answer(f'Введите город')
 
-    # Создаем обработчик, который будет ждать ответ от пользователя
-    @dp.message_handler(lambda msg: msg.text and msg.text.strip(), content_types=types.ContentTypes.TEXT)
-    async def handle_city(message: types.Message):
-        # Получаем введенный пользователем город
+active_handlers = {}
+
+
+@bot.message_handler(commands=['low'])
+def low_command(message):
+    user = bot.send_message(message.chat.id, 'Введите город')
+    handler_id = message.chat.id
+
+    @bot.message_handler(func=lambda msg: msg.text and msg.text.strip(), content_types=['text'])
+    def handle_city(message):
         user_city = message.text.strip()
-
-        # Получаем список локаций для введенного города
-        locations = await city_info(user_city)
-
+        locations = city_info(user_city)
         if locations:
-            # Предоставляем пользователю выбор локации с помощью инлайн клавиатуры
-            await message.reply('Выберите город из списка:', reply_markup=get_locations(locations))
+            markup = get_locations(locations)
+            bot.send_message(message.chat.id, 'Выберите город из списка:', reply_markup=markup)
         else:
-            await message.reply('Города не найдены.')
+            bot.send_message(message.chat.id, 'Города не найдены.')
 
-        # Удаляем обработчик после завершения этапа выбора города
-        dp.remove_handler(handle_city)
 
-    # Указываем, что ждем ответа о городе
-    dp.register_message_handler(handle_city)

@@ -1,8 +1,7 @@
-from aiogram import types
-from loader import dp
+import telebot
+from loader import bot
 
-
-@dp.message_handler(commands=['start'])
-async def start_settings(message: types.Message):
+@bot.message_handler(commands=['start'])
+def start_settings(message):
     user_name = message.from_user.first_name
-    await message.answer(f'Здраствуйте, {user_name} !')
+    bot.send_message(message.chat.id, f'Здравствуйте, {user_name}!')
