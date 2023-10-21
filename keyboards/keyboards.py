@@ -1,5 +1,6 @@
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+
 def get_locations(locations):
     keyboard = InlineKeyboardMarkup()
     for location in locations:
