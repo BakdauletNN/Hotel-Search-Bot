@@ -2,6 +2,8 @@ import os
 from loader import bot
 from config_data.config import API_KEY
 import requests
+from utils.low_price import city_info
+
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 

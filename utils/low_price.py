@@ -30,6 +30,7 @@ def city_info(name_city):
         response = requests.get(url, params=querystring, headers=headers, timeout=10)
         if response.status_code == requests.codes.ok:
             full_names = [item['regionNames']['fullName'] for item in response.json()['sr']]
+            gaia_id = response.json().get('sr', [])[0]['gaiaId']
             if not full_names:
                 return None
             else:
@@ -41,10 +42,12 @@ def city_info(name_city):
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
 
+#
 # def main():
 #     try:
 #         result = city_info('tokyo')
 #         print(result)
+#         print()
 #     except APIError as e:
 #         print(f'API Error: {str(e)}')
 #     except ConnectionError as e:
