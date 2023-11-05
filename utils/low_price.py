@@ -29,12 +29,14 @@ def city_info(name_city):
     try:
         response = requests.get(url, params=querystring, headers=headers, timeout=10)
         if response.status_code == requests.codes.ok:
-            full_names = [item['regionNames']['fullName'] for item in response.json()['sr']]
-            gaia_id = response.json().get('sr', [])[0]['gaiaId']
-            if not full_names:
+            locations = response.json().get('sr', [])
+            filtered_locations = [item['regionNames']['fullName'] for item in locations if
+                                  item['type'] in ['CITY', 'NEIGHBORHOOD']]
+            gaia_id = locations[0]['gaiaId'] if locations else None
+            if not filtered_locations:
                 return None
             else:
-                return full_names
+                return filtered_locations
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:
@@ -42,7 +44,7 @@ def city_info(name_city):
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
 
-#
+
 # def main():
 #     try:
 #         result = city_info('tokyo')

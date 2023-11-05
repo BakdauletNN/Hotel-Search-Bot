@@ -4,6 +4,7 @@ from database import launcher_db
 from loader import bot
 from handlers.default_handlers import help
 from telebot.custom_filters import StateFilter
+from utils.callback_data import handle_location_callback
 
 
 if __name__ == '__main__':
