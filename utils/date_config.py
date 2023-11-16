@@ -54,4 +54,3 @@ def get_date(check_in_day,check_in_month,check_in_year,check_out_day,check_out_m
         "X-RapidAPI-Key": API_KEY,
         "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
     }
-

@@ -1,8 +1,7 @@
 from loader import bot
 from states.contact_information import UserInfoState
+from handlers.custom_handlers.city_handler import handle_city
 import re
-
-from utils.city_handler import handle_city
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("callback_data:"), state=UserInfoState.callback_data)
