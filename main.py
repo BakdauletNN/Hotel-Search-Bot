@@ -1,5 +1,5 @@
-import handlers
 from loader import bot
+import handlers
 from utils.set_bot_commands import set_default_commands
 
 

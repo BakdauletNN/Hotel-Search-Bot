@@ -1,6 +1,7 @@
+from loguru import logger
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
+@logger.catch()
 def get_locations(locations): # TODO принять [{ID, название}, {ID, название}...] сформировать кнопки
     keyboard = InlineKeyboardMarkup()
     for location in locations:

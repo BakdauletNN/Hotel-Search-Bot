@@ -1,9 +1,11 @@
+from loguru import logger
+
 from loader import bot
 from utils.low_price import city_info
 from keyboards.keyboards import get_locations
 from telebot.types import Message
 
-
+@logger.catch()
 def handle_city(message: Message) -> None:
     user_city = message.text.strip()
     locations = city_info(user_city)
