@@ -1,11 +1,12 @@
 from loguru import logger
 from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+
 @logger.catch()
-def get_locations(locations): # TODO принять [{ID, название}, {ID, название}...] сформировать кнопки
+def get_locations_keyboard(locations):
     keyboard = InlineKeyboardMarkup()
     for location in locations:
-        if len(location) <= 64:
-            callback_data = "callback_data:" + str(hash(location)) #TODO здесь подумайте какую строку сформировать, чтобы потом ловить ее в обработчике
-            keyboard.add(InlineKeyboardButton(text=location, callback_data=callback_data))
+        if len(location['название']) <= 64:
+            callback_data = f"callback_data:{hash(frozenset(location.items()))}"
+            keyboard.add(InlineKeyboardButton(text=location['название'], callback_data=callback_data))
     return keyboard
