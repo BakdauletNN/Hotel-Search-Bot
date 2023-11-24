@@ -3,7 +3,7 @@ from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 @logger.catch()
-def get_locations_keyboard(locations):
+def get_locations(locations):
     keyboard = InlineKeyboardMarkup()
     for location in locations:
         if len(location['название']) <= 64:
