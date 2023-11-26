@@ -24,7 +24,7 @@ class APIError(Exception):
 
 def city_info(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
     url = "https://hotels4.p.rapidapi.com/locations/v3/search"
-    querystring = {"q": name_city, "locale": "en_US", "langid": '1033', "siteid": '300000001'}
+    querystring = {"q": name_city.strip(), "locale": "en_US", "langid": '1033', "siteid": '300000001'}
     headers = {
         "content-type": "application/json",
         "X-RapidAPI-Key": API_KEY,
