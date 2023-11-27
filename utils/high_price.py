@@ -1,9 +1,11 @@
+from typing import Union, List, Dict
+
 import requests
 from config_data.config import API_KEY
 from loader import bot
 
-
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
+
 
 def request_api(url, params, headers):
     try:
@@ -15,10 +17,12 @@ def request_api(url, params, headers):
     except requests.ConnectionError:
         print('Error')
 
+
 class APIError(Exception):
     pass
 
-def city_info(name_city):
+
+def city_info(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
     url = "https://hotels4.p.rapidapi.com/locations/v3/search"
     querystring = {"q": name_city, "locale": "en_US", "langid": '1033', "siteid": '300000001'}
     headers = {
@@ -29,17 +33,23 @@ def city_info(name_city):
     try:
         response = requests.get(url, params=querystring, headers=headers, timeout=10)
         if response.status_code == requests.codes.ok:
-            full_names = [item['regionNames']['fullName'] for item in response.json()['sr']]
-            if not full_names:
+            locations = response.json().get('sr', [])
+            filtered_locations = [
+                {"ID": item['gaiaId'], "название": item['regionNames']['fullName']}
+                for item in locations
+                if item['type'] in ['CITY', 'NEIGHBORHOOD']
+            ]
+            if not filtered_locations:
                 return None
             else:
-                return full_names
+                return filtered_locations  # TODO вернуть список словарей [{ID, название}, {ID, название}...]
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:
             raise ConnectionError
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
+
 
 # def main():
 #     try:
