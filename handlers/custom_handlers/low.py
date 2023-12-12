@@ -13,9 +13,9 @@ def low_command(message: Message) -> None:
 
 @bot.message_handler(state=UserInfoState.user_city)
 def get_user_city(message: Message) -> None:
-    locations = city_info(message.text)
-    if locations and message.text.isalpha():
-        # locations = city_info(message.text)
+    # locations = city_info(message.text)
+    if message.text.isalpha():
+        locations = city_info(message.text)
         markup = get_locations(locations)  # TODO передавать список словарей [{ID, название}, {ID, название}...]
         bot.send_message(message.chat.id, 'Выберите локацию из списка:', reply_markup=markup)
     else:
