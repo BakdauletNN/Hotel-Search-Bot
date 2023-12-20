@@ -10,7 +10,7 @@ def child(message: Message) -> None:
         bot.set_state(message.from_user.id, UserInfoState.age_child, message.chat.id)
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['child_amount'] = message.text
-        bot.send_message(message.chat.id, 'Возраст детей')
+            bot.send_message(message.chat.id, 'Возраст детей')
     else:
         bot.send_message(message.chat.id, 'Хорошо, детей с собой нету')
         bot.send_message(message.chat.id, 'Введите дату въезда в формате (01.04.2021)')
