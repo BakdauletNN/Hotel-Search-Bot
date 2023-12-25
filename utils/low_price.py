@@ -1,8 +1,7 @@
 from typing import Union, List, Dict
-
 import requests
 from config_data.config import API_KEY
-from loader import bot
+
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 
@@ -42,7 +41,7 @@ def city_info(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
             if not filtered_locations:
                 return None
             else:
-                return filtered_locations  # TODO вернуть список словарей [{ID, название}, {ID, название}...]
+                return filtered_locations  ## TODO вернуть список словарей [{ID, название}, {ID, название}...]
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:

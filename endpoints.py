@@ -1,22 +1,22 @@
 
 
 #locations/v3/search
-
-import requests
-import json
-url = "https://hotels4.p.rapidapi.com/locations/v3/search"
-
-querystring = {"q":"new-york","locale":"en_US","langid":"1033","siteid":"300000001"}
-
-headers = {
-	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
-	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
-}
-
-response = requests.get(url, headers=headers, params=querystring)
-json_file = response.json()
-result = json.dumps(json_file,indent=4)
-print(result)
+#
+# import requests
+# import json
+# url = "https://hotels4.p.rapidapi.com/locations/v3/search"
+#
+# querystring = {"q":"new-york","locale":"en_US","langid":"1033","siteid":"300000001"}
+#
+# headers = {
+# 	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
+# 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+# }
+#
+# response = requests.get(url, headers=headers, params=querystring)
+# json_file = response.json()
+# result = json.dumps(json_file,indent=4)
+# print(result)
 
 
 #
@@ -76,8 +76,8 @@ print(result)
 
 
 
-# #properties/v2/detail
-#
+# # #properties/v2/detail
+# #
 # import requests
 # import json
 #
@@ -88,12 +88,11 @@ print(result)
 # 	"currency": "USD",
 # 	"eapid": 1,
 # 	"locale": "en_US",
-# 	"siteId": 300000001,
-# 	"propertyId": "9209612"
+# 	"siteId": 300000001,	"propertyId": "9209612"
 # }
 # headers = {
 # 	"content-type": "application/json",
-# 	"X-RapidAPI-Key": "21b1f0d5f0msh794c4bc1f79575bp1c2869jsnd0012662ca39",
+# 	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
 # 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 # }
 #
@@ -101,7 +100,7 @@ print(result)
 # json_file = response.json()
 # result = json.dumps(json_file,indent=4)
 # print(result)
-#
+
 
 
 

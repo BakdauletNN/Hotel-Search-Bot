@@ -10,6 +10,6 @@ class UserInfoState(StatesGroup):
     age_child = State()
     date_entry = State()
     date_exit = State()
-    number_hotel = State()
+    answer_hotel = State()
     hotel_photo = State()
 
