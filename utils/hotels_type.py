@@ -6,6 +6,7 @@ from handlers.custom_handlers.children import age_children
 from handlers.custom_handlers.entry_data import entry_date
 from handlers.custom_handlers.date_exit import exit_date
 from handlers.custom_handlers.callback_data import handle_location_callback
+from loader import bot
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -28,6 +29,7 @@ class APIError(Exception):
 
 
 @logger.catch()
+@bot.message_handler()
 def get_date(adults_amount=adults, child_age=age_children,
              # entry_day=check_in_day, entry_month=check_in_month, entry_year=check_in_year,
              # exit_day=check_out_day, exit_month=check_out_month, exit_year=check_out_year,
@@ -78,13 +80,14 @@ def get_date(adults_amount=adults, child_age=age_children,
             json_data = response.json()
             properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
             return properties
-            # for i, property_data in enumerate(properties[:5]):
-            #     hotel_name = properties[i]["name"]
-            #     hotel_id = properties[i]["id"]
-            #     print(f"Отель {i + 1}:")
-            #     print("Имя отеля:", hotel_name)
-            #     print("ID отеля:", hotel_id)
-            #     print("-" * 10)
+            for i, property_data in enumerate(properties[:5]):
+                    hotel_name = properties[i]["name"]
+                    hotel_id = properties[i]['id']
+                    bot.send_message(message)
+                    print(f"Отель {i + 1}:")
+                    print("Имя отеля:", hotel_name)
+                    print("ID отеля:", hotel_id)
+                    print("-" * 10)
 
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
