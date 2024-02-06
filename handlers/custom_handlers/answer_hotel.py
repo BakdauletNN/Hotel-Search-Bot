@@ -12,7 +12,7 @@ def send_hotels(message: Message) -> None:
         if exit_config.date() >= date.today():
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
                 data['exit'] = exit_config.strftime('%d.%m.%Y')
-            bot.send_message(message.chat.id, 'Дата выезда записана')
+            bot.send_message(message.chat.id, 'Дата выезда записана, вот вам отели', get_date())
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'
                                           ' Попробуйте еще раз.')

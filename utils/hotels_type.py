@@ -30,7 +30,7 @@ class APIError(Exception):
 
 @logger.catch()
 @bot.message_handler()
-def get_date(adults_amount=adults, child_age=age_children,
+def get_date(message, adults_amount=adults, child_age=age_children,
              # entry_day=check_in_day, entry_month=check_in_month, entry_year=check_in_year,
              # exit_day=check_out_day, exit_month=check_out_month, exit_year=check_out_year,
              id=handle_location_callback) -> None:
@@ -83,11 +83,10 @@ def get_date(adults_amount=adults, child_age=age_children,
             for i, property_data in enumerate(properties[:5]):
                     hotel_name = properties[i]["name"]
                     hotel_id = properties[i]['id']
-                    bot.send_message(message)
-                    print(f"Отель {i + 1}:")
-                    print("Имя отеля:", hotel_name)
-                    print("ID отеля:", hotel_id)
-                    print("-" * 10)
+                    bot.send_message(message.chat.id,f"Отель {i + 1}:")
+                    bot.send_message(message.chat.id, "Имя отеля:", hotel_name)
+                    bot.send_message(message.chat.id, "ID отеля:", hotel_id)
+
 
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')

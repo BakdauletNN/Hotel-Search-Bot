@@ -11,8 +11,8 @@ def exit_date(message: Message) -> None:
         if entry_config.date() >= date.today():
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
                 data['entry'] = entry_config.strftime('%d.%m.%Y')
-            bot.send_message(message.chat.id, 'Дата въезда записана, введите дата выезда')
             bot.set_state(message.from_user.id, UserInfoState.answer_hotel, message.chat.id)
+            bot.send_message(message.chat.id, 'Дата въезда записана, введите дата выезда')
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'
                                           ' Попробуйте еще раз.')
