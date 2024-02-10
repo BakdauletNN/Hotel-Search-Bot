@@ -6,7 +6,7 @@ from handlers.custom_handlers.children import age_children
 from handlers.custom_handlers.entry_data import entry_date
 from handlers.custom_handlers.date_exit import exit_date
 from handlers.custom_handlers.callback_data import handle_location_callback
-from loader import bot
+from datetime import datetime
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -29,13 +29,20 @@ class APIError(Exception):
 
 
 @logger.catch()
-@bot.message_handler()
-def get_date(message, adults_amount=adults, child_age=age_children,
-             # entry_day=check_in_day, entry_month=check_in_month, entry_year=check_in_year,
-             # exit_day=check_out_day, exit_month=check_out_month, exit_year=check_out_year,
+def get_date(adults_amount=adults, child_age=age_children,
              id=handle_location_callback) -> None:
-    entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
-    exit_day, exit_month,  exit_year = map(int, exit_date.split('.'))
+    entry_configs = datetime.strptime(entry_date, '%d.%m.%Y')
+    exit_configs = datetime.strptime(exit_date, '%d.%m.%Y')
+
+    # Получение отдельных частей даты въезда
+    entry_day = entry_configs.day
+    entry_month = entry_configs.month
+    entry_year = entry_configs.year
+
+    # Получение отдельных частей даты выезда
+    exit_day = exit_configs.day
+    exit_month = exit_configs.month
+    exit_year = exit_configs.year
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -79,14 +86,12 @@ def get_date(message, adults_amount=adults, child_age=age_children,
         if response.status_code == requests.codes.ok:
             json_data = response.json()
             properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
-            return properties
             for i, property_data in enumerate(properties[:5]):
-                    hotel_name = properties[i]["name"]
-                    hotel_id = properties[i]['id']
-                    bot.send_message(message.chat.id,f"Отель {i + 1}:")
-                    bot.send_message(message.chat.id, "Имя отеля:", hotel_name)
-                    bot.send_message(message.chat.id, "ID отеля:", hotel_id)
-
+                hotel_name = properties[i]["name"]
+                hotel_id = properties[i]['id']
+                return f"Отель {i + 1}:"
+                return "Имя отеля:", hotel_name
+                return "ID отеля:", hotel_id
 
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
