@@ -6,10 +6,10 @@ from telebot.types import Message
 @bot.message_handler(state=UserInfoState.amount_child)
 def child(message: Message) -> None:
     if message.text.lower() == 'нет':
-        return UserInfoState.date_entry
+        bot.set_state(message.from_user.id, UserInfoState.date_entry, message.chat.id)
     elif message.text.lower() == 'да':
         bot.send_message(message.chat.id, 'Кол-во детей')
-        bot.state(message.from_user.id, UserInfoState.age_child, message.chat.id)
+        bot.set_state(message.from_user.id, UserInfoState.age_child, message.chat.id)
 
 
 @bot.message_handler(state=UserInfoState.age_child)
