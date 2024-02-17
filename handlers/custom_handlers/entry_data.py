@@ -5,8 +5,9 @@ from telebot.types import Message
 
 @bot.message_handler(state=UserInfoState.date_entry)
 def entry_date(message: Message) -> None:
+
     if message.text.lower() == 'нет':
-        bot.send_message(message.chat.id, 'Хорошо, детей с собой нету, введите дату въезда в формате (01.04.2021)')
+        bot.send_message(message.from_user.id, 'Дата въезда записана')
         bot.set_state(message.from_user.id, UserInfoState.date_exit, message.chat.id)
 
     elif message.text.isdigit():

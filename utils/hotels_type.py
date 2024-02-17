@@ -29,20 +29,9 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_date(adults_amount=adults, child_age=age_children,
-             id=handle_location_callback) -> None:
+def get_date(adults_amount=adults, child_age=age_children, id=handle_location_callback) -> None:
     entry_configs = datetime.strptime(entry_date, '%d.%m.%Y')
     exit_configs = datetime.strptime(exit_date, '%d.%m.%Y')
-
-    # Получение отдельных частей даты въезда
-    entry_day = entry_configs.day
-    entry_month = entry_configs.month
-    entry_year = entry_configs.year
-
-    # Получение отдельных частей даты выезда
-    exit_day = exit_configs.day
-    exit_month = exit_configs.month
-    exit_year = exit_configs.year
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -52,14 +41,14 @@ def get_date(adults_amount=adults, child_age=age_children,
         "siteId": 300000001,
         "destination": {"regionId": id},
         "checkInDate": {
-            "day": entry_day,
-            "month": entry_month,
-            "year": entry_year
+            "day": entry_configs.day,
+            "month": entry_configs.month,
+            "year": entry_configs.year
         },
         "checkOutDate": {
-            "day": exit_day,
-            "month": exit_month,
-            "year": exit_year
+            "day": exit_configs.day,
+            "month": exit_configs.month,
+            "year": exit_configs.year
         },
         "rooms": [
             {

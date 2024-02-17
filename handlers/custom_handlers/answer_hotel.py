@@ -11,7 +11,7 @@ def send_hotels(message: Message) -> None:
         exit_config = datetime.strptime(message.text, '%d.%m.%Y')
         if exit_config.date() >= date.today():
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-                data['exit'] = exit_config.strftime('%d.%m.%Y')
+                data['exit'] = exit_config
             bot.send_message(message.chat.id, 'Дата выезда записана, вот вам отели')
             bot.send_message(message.chat.id, get_date(data))
         else:
