@@ -29,9 +29,9 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_date(adults_amount=adults, child_age=age_children, id=handle_location_callback) -> None:
-    entry_configs = datetime.strptime(entry_date, '%d.%m.%Y')
-    exit_configs = datetime.strptime(exit_date, '%d.%m.%Y')
+def get_date(data: dict) -> None:
+    entry_configs = datetime.strptime(data.get(entry_date), '%d.%m.%Y')
+    exit_configs = datetime.strptime(data.get(exit_date), '%d.%m.%Y')
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -39,7 +39,7 @@ def get_date(adults_amount=adults, child_age=age_children, id=handle_location_ca
         "eapid": 1,
         "locale": "en_US",
         "siteId": 300000001,
-        "destination": {"regionId": id},
+        "destination": {"regionId": data.get(handle_location_callback)},
         "checkInDate": {
             "day": entry_configs.day,
             "month": entry_configs.month,
@@ -52,8 +52,8 @@ def get_date(adults_amount=adults, child_age=age_children, id=handle_location_ca
         },
         "rooms": [
             {
-                "adults": adults_amount,
-                "children": [{"age": child_age}, {"age": child_age}]
+                "adults":  data.get(adults),
+                "children": [{"age": data.get(adults)}, {"age": data.get(adults)}]
             }
         ],
         "resultsStartingIndex": 0,
@@ -75,18 +75,22 @@ def get_date(adults_amount=adults, child_age=age_children, id=handle_location_ca
         if response.status_code == requests.codes.ok:
             json_data = response.json()
             properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
+            hotel_info = []
             for i, property_data in enumerate(properties[:5]):
                 hotel_name = properties[i]["name"]
                 hotel_id = properties[i]['id']
-                return f"Отель {i + 1}:"
-                return "Имя отеля:", hotel_name
-                return "ID отеля:", hotel_id
+                hotel_info.append({
+                    "Отель": i + 1,
+                    "Имя отеля": hotel_name,
+                    "ID отеля": hotel_id
+                })
 
+            result = "\n".join([f"Отель {info['Отель']}: {info['Имя отеля']},"
+                                  f" ID: {info['ID отеля']}" for info in hotel_info])
+            return result
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:
             raise ConnectionError
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
-
-

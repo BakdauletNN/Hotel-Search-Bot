@@ -6,11 +6,7 @@ from telebot.types import Message
 @bot.message_handler(state=UserInfoState.date_entry)
 def entry_date(message: Message) -> None:
 
-    if message.text.lower() == 'нет':
-        bot.send_message(message.from_user.id, 'Дата въезда записана')
-        bot.set_state(message.from_user.id, UserInfoState.date_exit, message.chat.id)
-
-    elif message.text.isdigit():
+    if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['child_age'] = message.text
         bot.set_state(message.from_user.id, UserInfoState.date_exit, message.chat.id)
