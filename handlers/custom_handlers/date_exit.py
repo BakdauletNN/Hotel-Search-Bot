@@ -7,10 +7,9 @@ from datetime import datetime, date
 @bot.message_handler(state=UserInfoState.date_exit)
 def exit_date(message: Message) -> None:
     try:
-        entry_config = datetime.strptime(message.text, '%d.%m.%Y')
-        if entry_config.date() >= date.today():
+        if date.today() <= datetime.strptime(message.text, '%d.%m.%Y').date():
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-                data['entry'] = entry_config
+                data['entry'] = message.text
             bot.set_state(message.from_user.id, UserInfoState.answer_hotel, message.chat.id)
             bot.send_message(message.chat.id, 'Дата въезда записана, введите дата выезда')
         else:

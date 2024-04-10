@@ -19,8 +19,8 @@ def age_children(message: Message) -> None:
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['child_amount'] = message.text
-        bot.send_message(message.chat.id, 'Кол-во записана, Теперь введите возраст детей через запятую')
         bot.set_state(message.from_user.id, UserInfoState.date_entry, message.chat.id)
+        bot.send_message(message.chat.id, 'Кол-во записана, Теперь введите возраст детей через пробел')
 
     else:
         bot.send_message(message.chat.id, 'Кол-во может быть числом')

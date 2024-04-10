@@ -8,17 +8,21 @@ from datetime import datetime,date
 @bot.message_handler(state=UserInfoState.answer_hotel)
 def send_hotels(message: Message) -> None:
     try:
-        exit_config = datetime.strptime(message.text, '%d.%m.%Y')
-        if exit_config.date() >= date.today():
+        # проверка на то что введенная дата выезда не раньше текущей даты
+        if  date.today() <= datetime.strptime(message.text, '%d.%m.%Y').date():
+            # Получение данных пользователя и запись в них введенной даты выезда.
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-                data['exit'] = exit_config
+                data['exit'] = message.text
             bot.send_message(message.chat.id, 'Дата выезда записана, вот вам отели')
+
+            # данные от user которые мы раньше хранили в data,
+            # на основании этого будем предлогать отель передав data в функцию get_date
             bot.send_message(message.chat.id, get_date(data))
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'
-                                          ' Попробуйте еще раз.')
+                                              ' Попробуйте еще раз.')
     except ValueError:
+        # обработка случая когда введенная пользователем строка не соответствует формату даты
         bot.send_message(message.chat.id, 'Некорректный формат даты. Введите дату в формате dd.mm.yyyy.')
-
 
 
