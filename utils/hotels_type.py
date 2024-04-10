@@ -5,8 +5,6 @@ from handlers.custom_handlers.callback_data import handle_location_callback
 from handlers.custom_handlers.adults import adults
 from handlers.custom_handlers.entry_data import entry_date
 from handlers.custom_handlers.date_exit import exit_date
-from handlers.custom_handlers.answer_hotel import send_hotels
-import re
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -29,11 +27,10 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_date(data: dict) -> None:
-    date_pattern = r'(\d{1,2})\.(\d{1,2})\.(\d{4})'
-    # Обработка даты ввода
-    entry_day, entry_month, entry_year = map(int, re.match(date_pattern, data.get(exit_date)).groups())
-    exit_day, exit_month, exit_year = map(int, re.match(date_pattern, data.get(send_hotels)).groups())
+def get_date(data: dict) -> str:
+
+    exit_date = data.get('entry')  # Получаем строку с датой въезда
+    entry_day, entry_month, entry_year = map(int, exit_date.split('.'))
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -48,9 +45,9 @@ def get_date(data: dict) -> None:
             "year": entry_year
         },
         "checkOutDate": {
-            "day": exit_day,
-            "month": exit_month,
-            "year": exit_year
+            "day": 5,
+            "month": 12,
+            "year": 2024
         },
         "rooms": [
             {
