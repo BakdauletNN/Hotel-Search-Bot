@@ -9,7 +9,7 @@
 # querystring = {"q":"new-york","locale":"en_US","langid":"1033","siteid":"300000001"}
 #
 # headers = {
-# 	"X-RapidAPI-Key": ""
+# 	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
 # 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 # }
 #
@@ -61,7 +61,7 @@
 # }
 # headers = {
 # 	"content-type": "application/json",
-# 	"X-RapidAPI-Key": "",
+# 	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
 # 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 # }
 #
@@ -93,7 +93,7 @@
 # }
 # headers = {
 # 	"content-type": "application/json",
-# 	"X-RapidAPI-Key": "",
+# 	"X-RapidAPI-Key": "b55e9fa539mshe5eb31f0fe6a639p1b322ajsn4b5bfa68a0f1",
 # 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 # }
 #
@@ -116,7 +116,7 @@
 # querystring = {"id":"1178275040"}
 #
 # headers = {
-# 	"X-RapidAPI-Key": "",
+# 	"X-RapidAPI-Key": "21b1f0d5f0msh794c4bc1f79575bp1c2869jsnd0012662ca39",
 # 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 # }
 #

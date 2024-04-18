@@ -38,7 +38,7 @@ def get_date(data: dict) -> str:
         "eapid": 1,
         "locale": "en_US",
         "siteId": 300000001,
-        "destination": {"regionId": data.get(handle_location_callback)},
+        "destination": {"regionId": data(handle_location_callback)},
         "checkInDate": {
             "day": entry_day,
             "month": entry_month,
@@ -51,8 +51,8 @@ def get_date(data: dict) -> str:
         },
         "rooms": [
             {
-                "adults":  data.get(adults),
-                "children": [{"age": data.get(entry_date)}, {"age": data.get(entry_date)}]
+                "adults":  data(adults),
+                "children": [{"age": data(entry_date)}, {"age": data(entry_date)}]
             }
         ],
         "resultsStartingIndex": 0,
