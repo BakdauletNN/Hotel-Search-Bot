@@ -5,6 +5,7 @@ from handlers.custom_handlers.callback_data import handle_location_callback
 from handlers.custom_handlers.adults import adults
 from handlers.custom_handlers.entry_data import entry_date
 from handlers.custom_handlers.date_exit import exit_date
+#from handlers.custom_handlers.answer_hotel import send_hotels
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -32,27 +33,34 @@ def get_date(data: dict) -> str:
     exit_date = data.get('entry')  # Получаем строку с датой въезда
     entry_day, entry_month, entry_year = map(int, exit_date.split('.'))
 
+    send_hotels = data.get('exit')
+    exit_day, exit_month, exit_year = map(int, send_hotels.split('.'))
+
+    adults = data.get('adults')
+    entry_date = data.get('child_age')
+    handle_location_callback = data.get('id_location')
+
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
         "currency": "USD",
         "eapid": 1,
         "locale": "en_US",
         "siteId": 300000001,
-        "destination": {"regionId": data(handle_location_callback)},
+        "destination": {"regionId": handle_location_callback},
         "checkInDate": {
             "day": entry_day,
             "month": entry_month,
             "year": entry_year
         },
         "checkOutDate": {
-            "day": 5,
-            "month": 12,
-            "year": 2024
+            "day": exit_day,
+            "month": exit_month,
+            "year": exit_year
         },
         "rooms": [
             {
-                "adults":  data(adults),
-                "children": [{"age": data(entry_date)}, {"age": data(entry_date)}]
+                "adults": adults ,
+                "children": [{"age": entry_date}, {"age": entry_date}]
             }
         ],
         "resultsStartingIndex": 0,

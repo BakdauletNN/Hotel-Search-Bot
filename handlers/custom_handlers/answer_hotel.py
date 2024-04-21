@@ -17,12 +17,16 @@ def send_hotels(message: Message) -> None:
 
             # данные от user которые мы раньше хранили в data,
             # на основании этого будем предлогать отель передав data в функцию get_date
-                result = get_date(data)
-                bot.send_message(message.chat.id, result)
+            result = get_date(data)
+            bot.send_message(message.chat.id, result)
+
+
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'
                                               ' Попробуйте еще раз.')
     except ValueError:
         # обработка случая когда введенная пользователем строка не соответствует формату даты
         bot.send_message(message.chat.id, 'Некорректный формат даты. Введите дату в формате dd.mm.yyyy.')
+
+
 

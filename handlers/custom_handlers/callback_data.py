@@ -1,7 +1,6 @@
 from loader import bot
 import re
 from states.contact_information import UserInfoState
-from telebot.types import Message
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("callback_data:"))
