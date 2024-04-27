@@ -5,22 +5,10 @@ from handlers.custom_handlers.callback_data import handle_location_callback
 from handlers.custom_handlers.adults import adults
 from handlers.custom_handlers.entry_data import entry_date
 from handlers.custom_handlers.date_exit import exit_date
-#from handlers.custom_handlers.answer_hotel import send_hotels
+from handlers.custom_handlers.answer_hotel import send_hotels
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
-
-
-@logger.catch()
-def request_api(url, params, headers):
-    try:
-        response = requests.get(url, params=params, headers=headers, timeout=10)
-        if response.status_code == requests.codes.ok:
-            return response
-        else:
-            raise ConnectionError
-    except requests.ConnectionError:
-        print('Error')
 
 
 class APIError(Exception):
@@ -28,7 +16,7 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_date(data: dict) -> str:
+def get_date(data: dict):
 
     exit_date = data.get('entry')  # Получаем строку с датой въезда
     entry_day, entry_month, entry_year = map(int, exit_date.split('.'))
@@ -59,12 +47,12 @@ def get_date(data: dict) -> str:
         },
         "rooms": [
             {
-                "adults": adults ,
+                "adults": int(adults),
                 "children": [{"age": entry_date}, {"age": entry_date}]
             }
         ],
         "resultsStartingIndex": 0,
-        "resultsSize": 10,
+        "resultsSize": 200,
         "sort": "PRICE_LOW_TO_HIGH",
         "filters": {"price": {
             "max": 150,
