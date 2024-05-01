@@ -16,7 +16,7 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_date(data: dict):
+def get_data(data: dict):
 
     exit_date = data.get('entry')  # Получаем строку с датой въезда
     entry_day, entry_month, entry_year = map(int, exit_date.split('.'))
@@ -48,16 +48,13 @@ def get_date(data: dict):
         "rooms": [
             {
                 "adults": int(adults),
-                "children": [{"age": entry_date}, {"age": entry_date}]
+                "children": [{"age": age} for age in entry_date]
             }
         ],
         "resultsStartingIndex": 0,
         "resultsSize": 200,
         "sort": "PRICE_LOW_TO_HIGH",
-        "filters": {"price": {
-            "max": 150,
-            "min": 100
-        }}
+
     }
     headers = {
         "content-type": "application/json",
@@ -89,3 +86,4 @@ def get_date(data: dict):
             raise ConnectionError
     except requests.ConnectionError:
         raise ConnectionError('Connection Error')
+

@@ -14,7 +14,7 @@ def child(message: Message) -> None:
         bot.set_state(message.from_user.id, UserInfoState.age_child, message.chat.id)
 
 
-@bot.message_handler(state=UserInfoState.age_child)
+@bot.message_handler(state=UserInfoState.age_child, is_digit=True)
 def age_children(message: Message) -> None:
     if message.text.isdigit():
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
