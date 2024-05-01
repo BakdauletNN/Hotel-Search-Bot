@@ -5,5 +5,5 @@ from config_data import config
 
 logger.add('debug.log', format="{time} {level} {message}")
 storage = StateMemoryStorage()
-bot = TeleBot(token=config.BOT_TOKEN, state_storage=storage)
+bot = TeleBot = TeleBot(token=config.BOT_TOKEN, state_storage=storage)
 bot.add_custom_filter(custom_filters.StateFilter(bot))
