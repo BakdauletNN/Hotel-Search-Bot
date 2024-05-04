@@ -14,11 +14,12 @@ def send_hotels(message: Message):
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
                 data['exit'] = message.text
             bot.send_message(message.chat.id, 'Дата выезда записан, вот вам отели')
+
             # данные от user которые мы раньше хранили в data,
             # на основании этого будем предлогать отель передав data в функцию get_date
+
             result = get_data(data)
             bot.send_message(message.chat.id, result)
-
 
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'

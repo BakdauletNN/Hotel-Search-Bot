@@ -1,11 +1,6 @@
 from loguru import logger
 from config_data.config import API_KEY
 import requests
-from handlers.custom_handlers.callback_data import handle_location_callback
-from handlers.custom_handlers.adults import adults
-from handlers.custom_handlers.entry_data import entry_date
-from handlers.custom_handlers.date_exit import exit_date
-from handlers.custom_handlers.answer_hotel import send_hotels
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -18,14 +13,14 @@ class APIError(Exception):
 @logger.catch()
 def get_data(data: dict):
 
-    exit_date = data.get('entry')  # Получаем строку с датой въезда
-    entry_day, entry_month, entry_year = map(int, exit_date.split('.'))
+    entry_date = data.get('entry')  # Получаем строку с датой въезда
+    entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
 
-    send_hotels = data.get('exit')
-    exit_day, exit_month, exit_year = map(int, send_hotels.split('.'))
+    exit_date = data.get('exit')
+    exit_day, exit_month, exit_year = map(int, exit_date.split('.'))
 
     adults = data.get('adults')
-    entry_date = data.get('child_age')
+    children_ages = data.get('child_age')
     handle_location_callback = data.get('id_location')
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
@@ -48,7 +43,7 @@ def get_data(data: dict):
         "rooms": [
             {
                 "adults": int(adults),
-                "children": [{"age": age} for age in entry_date]
+                "children": [{"age": age} for age in children_ages]
             }
         ],
         "resultsStartingIndex": 0,
