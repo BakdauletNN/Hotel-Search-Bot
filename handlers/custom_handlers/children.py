@@ -6,7 +6,6 @@ from telebot.types import Message
 @bot.message_handler(state=UserInfoState.amount_child)
 def child(message: Message) -> None:
     if message.text.lower() == 'нет':
-        bot.send_message(message.from_user.id, 'Понял')
         bot.send_message(message.from_user.id, 'Понял, детей с собой нету.Введите дату въезда')
         bot.set_state(message.from_user.id, UserInfoState.date_exit, message.chat.id)
     elif message.text.lower() == 'да':

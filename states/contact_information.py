@@ -11,4 +11,4 @@ class UserInfoState(StatesGroup):
     date_entry = State()
     date_exit = State()
     answer_hotel = State()
-
+    quantity_photo = State()
