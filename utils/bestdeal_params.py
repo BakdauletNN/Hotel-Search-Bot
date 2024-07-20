@@ -11,7 +11,7 @@ class APIError(Exception):
 
 
 @logger.catch()
-def get_data(data: dict):
+def get_data_bestdeal(data: dict):
     entry_date = data.get('entry')
     entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
 
@@ -22,6 +22,8 @@ def get_data(data: dict):
     children_ages = data.get('child_age', [])
 
     handle_location_callback = data.get('id_location')
+    min_price = data.get('price_min')
+    max_price = data.get('price_max')
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -48,7 +50,11 @@ def get_data(data: dict):
         ],
         "resultsStartingIndex": 0,
         "resultsSize": 200,
-        "sort": "PRICE_LOW_TO_HIGH",
+        "sort": "DISTANCE",
+        "filters": {"price": {
+            "max": max_price,
+            "min": min_price
+        }}
     }
     headers = {
         "content-type": "application/json",
@@ -58,26 +64,27 @@ def get_data(data: dict):
 
     try:
         response = requests.post(url, json=payload, headers=headers)
-        if response.status_code == requests.codes.ok:
-            json_data = response.json()
-            properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
-            hotel_info = []
-            hotel_ids = []
-            for i, property_data in enumerate(properties[:5]):
-                hotel_name = property_data["name"]
-                hotel_id = property_data['id']
-                hotel_info.append({
-                    "Отель": i + 1,
-                    "Имя отеля": hotel_name,
-                    "ID отеля": hotel_id
-                })
-                hotel_ids.append(hotel_id)  # Добавляем id отеля в список
+        response.raise_for_status()
+        json_data = response.json()
+        properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
+        hotel_info = []
+        hotel_ids = []
+        for i, property_data in enumerate(properties[:5]):
+            hotel_name = property_data["name"]
+            hotel_id = property_data['id']
+            one_day_price = property_data["price"]["options"][0]["formattedDisplayPrice"]
 
-            result = "\n".join([f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}" for info in hotel_info])
-            return result, hotel_ids  # Возвращаем результат и список идентификаторов
-        elif response.status_code == 401:
-            raise APIError('API Key is not authorized (Error 401)')
-        else:
-            raise ConnectionError
-    except requests.ConnectionError:
-        raise ConnectionError('Connection Error')
+            hotel_info.append({
+                "Отель": i + 1,
+                "Имя отеля": hotel_name,
+                "ID отеля": hotel_id,
+                "Цена за 1 сутки": one_day_price
+            })
+            hotel_ids.append(hotel_id)
+
+        result = "\n".join([f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}" for info in hotel_info])
+        return result, hotel_ids
+
+    except requests.RequestException as err:
+        logger.error(f"Error occurred: {err}")
+        raise APIError('Request Error')

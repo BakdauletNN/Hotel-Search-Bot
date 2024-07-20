@@ -6,11 +6,22 @@ from config_data.config import API_KEY
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 
 
+def request_api(url, params, headers):
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        if response.status_code == requests.codes.ok:
+            return response
+        else:
+            raise ConnectionError
+    except requests.ConnectionError:
+        print('Error')
+
+
 class APIError(Exception):
     pass
 
 
-def city_info_user(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
+def city_info_bestdeal(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
     url = "https://hotels4.p.rapidapi.com/locations/v3/search"
     querystring = {"q": name_city.strip(), "locale": "en_US", "langid": '1033', "siteid": '300000001'}
     headers = {
@@ -30,7 +41,7 @@ def city_info_user(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
             if not filtered_locations:
                 return None
             else:
-                return filtered_locations
+                return filtered_locations  ## TODO вернуть список словарей [{ID, название}, {ID, название}...]
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:
