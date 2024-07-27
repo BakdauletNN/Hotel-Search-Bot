@@ -20,8 +20,8 @@ def request_api(url, params, headers):
 @logger.catch()
 def hotel_info(data: dict):
     id_hotel = data.get('property_id')
-    url = "https://hotels4.p.rapidapi.com/properties/v2/detail"
-
+    url = "https://hotels4.p.rapidapi.com/properties/v2/get-summary"
+    photos_amount_user = data.get('photos', 0)
     payload = {
         "currency": "USD",
         "eapid": 1,
@@ -48,11 +48,11 @@ def hotel_info(data: dict):
             name = properties.get('summary', {}).get('name', "")
             location = properties.get("summary", {}).get("location", {}).get("address", {}).get("addressLine", "")
             map_url = properties.get("summary", {}).get("location", {}).get("staticImage", {}).get("url", "")
-            photos = properties.get('propertyGallery', {}).get('images', [])
+            photos = properties.get('propertyGallery', {}).get('images', [])[:int(photos_amount_user)]
 
             photo_urls = [photo.get('image', {}).get('url', '') for photo in photos]
 
-            hotel_info_str = f"Название: {name}\nЛокация: {location}\nUrl: {map_url}"
+            hotel_info_str = f"Name hotel: {name}\nLocation: {location}\nMap url: {map_url}"
             return hotel_info_str, photo_urls
 
         else:

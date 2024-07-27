@@ -9,8 +9,9 @@ api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 class APIError(Exception):
     pass
 
+
 @logger.catch()
-def get_high_price_data(data: dict):
+def get_data_high(data: dict):
     entry_date = data.get('entry')
     entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
 
@@ -19,6 +20,7 @@ def get_high_price_data(data: dict):
 
     adults = data.get('adults')
     children_ages = data.get('child_age', [])
+    hotels_amount_param = data.get('hotels_qty', 1)
 
     handle_location_callback = data.get('id_location')
 
@@ -47,7 +49,7 @@ def get_high_price_data(data: dict):
         ],
         "resultsStartingIndex": 0,
         "resultsSize": 200,
-        "sort": "REVIEW",
+        "sort": "PROPERTY_CLASS",
     }
     headers = {
         "content-type": "application/json",
@@ -62,7 +64,7 @@ def get_high_price_data(data: dict):
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
         hotel_info = []
         hotel_ids = []
-        for i, property_data in enumerate(properties[:5]):
+        for i, property_data in enumerate(properties[:int(hotels_amount_param)]):
             hotel_name = property_data["name"]
             hotel_id = property_data['id']
             one_day_price = property_data["price"]["options"][0]["formattedDisplayPrice"]

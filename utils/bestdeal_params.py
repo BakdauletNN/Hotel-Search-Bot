@@ -1,3 +1,4 @@
+import re
 from loguru import logger
 from config_data.config import API_KEY
 import requests
@@ -10,6 +11,10 @@ class APIError(Exception):
     pass
 
 
+def km_to_miles(km):  # функция для того чтобы конвертировать км в мили для сравнения с данными из API
+    return km / 1.60934
+
+
 @logger.catch()
 def get_data_bestdeal(data: dict):
     entry_date = data.get('entry')
@@ -20,10 +25,13 @@ def get_data_bestdeal(data: dict):
 
     adults = data.get('adults')
     children_ages = data.get('child_age', [])
+    hotels_amount_param = data.get('hotels_qty', 1)
 
     handle_location_callback = data.get('id_location')
-    min_price = data.get('price_min')
-    max_price = data.get('price_max')
+    min_price = float(data.get('price_min_bestdeal'))
+    max_price = float(data.get('price_max_bestdeal'))
+    distance_param_km = data.get('center_distance')
+    distance_param_mi = km_to_miles(distance_param_km)
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -51,15 +59,17 @@ def get_data_bestdeal(data: dict):
         "resultsStartingIndex": 0,
         "resultsSize": 200,
         "sort": "DISTANCE",
-        "filters": {"price": {
-            "max": max_price,
-            "min": min_price
-        }}
+        "filters": {
+            "price": {
+                "max": max_price,
+                "min": min_price
+            }
+        }
     }
     headers = {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": API_KEY,
-        "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+        "x-rapidapi-key": API_KEY,
+        "x-rapidapi-host": "hotels4.p.rapidapi.com",
+        "Content-Type": "application/json"
     }
 
     try:
@@ -69,20 +79,29 @@ def get_data_bestdeal(data: dict):
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
         hotel_info = []
         hotel_ids = []
-        for i, property_data in enumerate(properties[:5]):
-            hotel_name = property_data["name"]
-            hotel_id = property_data['id']
-            one_day_price = property_data["price"]["options"][0]["formattedDisplayPrice"]
+        for i, property_data in enumerate(properties[:int(hotels_amount_param)]):
+            one_day_price_str = property_data["price"]["options"][0]["formattedDisplayPrice"]
+            one_day_price = float(re.sub(r'[^\d.]', '', one_day_price_str))
+            distance_from_center = float(property_data["destinationInfo"]["distanceFromMessaging"].split(' ')[0])
 
-            hotel_info.append({
-                "Отель": i + 1,
-                "Имя отеля": hotel_name,
-                "ID отеля": hotel_id,
-                "Цена за 1 сутки": one_day_price
-            })
-            hotel_ids.append(hotel_id)
+            if distance_from_center <= distance_param_mi and min_price <= one_day_price <= max_price:
+                hotel_name = property_data["name"]
+                hotel_id = property_data['id']
 
-        result = "\n".join([f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}" for info in hotel_info])
+                hotel_info.append({
+                    "Отель": i + 1,
+                    "Имя отеля": hotel_name,
+                    "ID отеля": hotel_id,
+                    "Цена за 1 сутки": one_day_price_str
+                })
+                hotel_ids.append(hotel_id)
+
+        if not hotel_info:
+            return "Нет отелей, соответствующих указанным критериям.", []
+
+        result = "\n".join([
+            f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
+            for info in hotel_info])
         return result, hotel_ids
 
     except requests.RequestException as err:

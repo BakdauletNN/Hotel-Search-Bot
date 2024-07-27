@@ -20,6 +20,7 @@ def get_data(data: dict):
 
     adults = data.get('adults')
     children_ages = data.get('child_age', [])
+    hotels_amount_param = data.get('hotels_qty', 1)
 
     handle_location_callback = data.get('id_location')
 
@@ -63,7 +64,7 @@ def get_data(data: dict):
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
         hotel_info = []
         hotel_ids = []
-        for i, property_data in enumerate(properties[:5]):
+        for i, property_data in enumerate(properties[:int(hotels_amount_param)]):
             hotel_name = property_data["name"]
             hotel_id = property_data['id']
             one_day_price = property_data["price"]["options"][0]["formattedDisplayPrice"]
