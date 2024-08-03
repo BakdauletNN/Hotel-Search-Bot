@@ -9,6 +9,7 @@ def hotels_amount(message: Message):
         if 1 <= int(message.text) <= 5:
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
                 data['hotels_qty'] = message.text
+
                 bot.set_state(message.from_user.id, UserInfoState.quantity_photo, message.chat.id)
                 bot.send_message(message.chat.id, 'Кол-во отелей записана, нужны фото (да/нет)?')
         else:

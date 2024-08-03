@@ -12,6 +12,7 @@ def photos_hotel(message: Message):
     elif message.text.lower() == 'нет':
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['photos'] = 0
+
         bot.set_state(message.from_user.id, UserInfoState.final, message.chat.id)
         send_info(message)  # Вызов функции отправки информации сразу
     else:

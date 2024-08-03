@@ -4,7 +4,7 @@ from telebot.types import Message
 
 
 @bot.message_handler(state=UserInfoState.amount_adults)
-def adults(message: Message) -> None:
+def adults_amount(message: Message) -> None:
     if message.text.isdigit():
         bot.set_state(message.from_user.id, UserInfoState.amount_child, message.chat.id)
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:

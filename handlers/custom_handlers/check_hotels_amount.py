@@ -10,6 +10,7 @@ def get_amount_hotels(message: Message):
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             if datetime.strptime(message.text, '%d.%m.%Y').date() > datetime.strptime(data.get('entry'), '%d.%m.%Y').date():
                 data['exit'] = message.text
+
                 bot.set_state(message.from_user.id, UserInfoState.photo, message.chat.id)
                 bot.send_message(message.chat.id, 'Дата выезда записана, введите кол-во отелей, не больше 5')
             else:

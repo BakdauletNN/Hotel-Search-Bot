@@ -1,7 +1,7 @@
-import re
 from loguru import logger
 from config_data.config import API_KEY
 import requests
+import re
 
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
@@ -11,27 +11,22 @@ class APIError(Exception):
     pass
 
 
-def km_to_miles(km):  # функция для того чтобы конвертировать км в мили для сравнения с данными из API
+def km_to_miles(km):
     return km / 1.60934
 
 
 @logger.catch()
-def get_data_bestdeal(data: dict):
+def get_data(data: dict, sort_type: str, filters: dict = None):
     entry_date = data.get('entry')
-    entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
-
     exit_date = data.get('exit')
+
+    entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
     exit_day, exit_month, exit_year = map(int, exit_date.split('.'))
 
     adults = data.get('adults')
     children_ages = data.get('child_age', [])
     hotels_amount_param = data.get('hotels_qty', 1)
-
     handle_location_callback = data.get('id_location')
-    min_price = float(data.get('price_min_bestdeal'))
-    max_price = float(data.get('price_max_bestdeal'))
-    distance_param_km = data.get('center_distance')
-    distance_param_mi = km_to_miles(distance_param_km)
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     payload = {
@@ -58,18 +53,13 @@ def get_data_bestdeal(data: dict):
         ],
         "resultsStartingIndex": 0,
         "resultsSize": 200,
-        "sort": "DISTANCE",
-        "filters": {
-            "price": {
-                "max": max_price,
-                "min": min_price
-            }
-        }
+        "sort": sort_type,
+        "filters": filters if filters else {}
     }
     headers = {
-        "x-rapidapi-key": API_KEY,
-        "x-rapidapi-host": "hotels4.p.rapidapi.com",
-        "Content-Type": "application/json"
+        "content-type": "application/json",
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
     }
 
     try:
@@ -77,14 +67,23 @@ def get_data_bestdeal(data: dict):
         response.raise_for_status()
         json_data = response.json()
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
+
         hotel_info = []
         hotel_ids = []
+        min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get("min") else None
+        max_price = float(filters.get("price", {}).get("max")) if filters and filters.get("price", {}).get("max") else None
+        distance_param_km = data.get('center_distance')
+        distance_param_mi = km_to_miles(distance_param_km) if distance_param_km else None
+
         for i, property_data in enumerate(properties[:int(hotels_amount_param)]):
             one_day_price_str = property_data["price"]["options"][0]["formattedDisplayPrice"]
             one_day_price = float(re.sub(r'[^\d.]', '', one_day_price_str))
-            distance_from_center = float(property_data["destinationInfo"]["distanceFromMessaging"].split(' ')[0])
+            distance_from_center_str = property_data.get("destinationInfo", {}).get("distanceFromMessaging")
+            distance_from_center = float(distance_from_center_str.split(' ')[0]) if distance_from_center_str else None
 
-            if distance_from_center <= distance_param_mi and min_price <= one_day_price <= max_price:
+            if ((distance_param_mi is None or (distance_from_center is not None and distance_from_center <= distance_param_mi)) and
+                    (min_price is None or one_day_price >= min_price) and
+                    (max_price is None or one_day_price <= max_price)):
                 hotel_name = property_data["name"]
                 hotel_id = property_data['id']
 
@@ -97,7 +96,7 @@ def get_data_bestdeal(data: dict):
                 hotel_ids.append(hotel_id)
 
         if not hotel_info:
-            return "Нет отелей, соответствующих указанным критериям.", []
+            return None, []
 
         result = "\n".join([
             f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
@@ -106,4 +105,5 @@ def get_data_bestdeal(data: dict):
 
     except requests.RequestException as err:
         logger.error(f"Error occurred: {err}")
-        raise APIError('Request Error')
+        return None, []
+

@@ -1,8 +1,6 @@
-from database import database
-
-
-def launcher_database():
-    database.db_start()
-
-
-launcher_database()
+# from database.models import create_tables
+#
+# def launcher_database():
+#     create_tables()
+#
+# launcher_database()
