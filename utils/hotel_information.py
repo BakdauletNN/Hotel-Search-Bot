@@ -10,6 +10,8 @@ api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 def hotel_info(data: dict):
     id_hotel = data.get('property_id')
     photos_amount_user = data.get('photos', 0)
+    if photos_amount_user is None:
+        photos_amount_user = data.get('photos')
     url = "https://hotels4.p.rapidapi.com/properties/v2/get-summary"
     payload = {
         "currency": "USD",
@@ -45,5 +47,5 @@ def hotel_info(data: dict):
         return hotel_info_str, photo_urls
 
     except requests.RequestException as err:
-        logger.error(f"Ошибка запроса: {err}")
+        logger.error(f"Ошибка при запросе данных отеля: {err}")
         return None

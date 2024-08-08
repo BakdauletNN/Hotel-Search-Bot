@@ -16,3 +16,4 @@ class UserInfoState(StatesGroup):
     price_max = State()
     distance = State()
     final = State()
+    history_user = State()

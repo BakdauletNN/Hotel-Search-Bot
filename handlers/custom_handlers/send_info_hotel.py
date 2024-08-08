@@ -10,30 +10,11 @@ from database.models import History
 @bot.message_handler(state=UserInfoState.final)
 def send_info(message: Message):
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-        if 'photos' not in data or data['photos'] == 0:
+        if 'photos' not in data or data['photos'] is None:
             if message.text.isdigit() and 1 <= int(message.text) <= 5:
                 data['photos'] = int(message.text)
             else:
                 data['photos'] = 0
-
-        required_fields = ['command', 'location_id', 'city', 'adults', 'entry_date', 'exit_date', 'hotels_qty', 'photos']
-        if all(data.get(field) is not None for field in required_fields):
-            History.create(
-                user_id=message.from_user.id,
-                command=data['command'],
-                city=data['city'],
-                location_id=data['location_id'],
-                adults_qty=data['adults'],
-                children=data['children'],
-                entry_date=data['entry_date'],
-                exit_date=data['exit_date'],
-                hotels_quantity=data['hotels_qty'],
-                photo_qty=data['photos'],
-                min_price=data.get('min_price'),
-                max_price=data.get('max_price'),
-                distance_from_center=data.get('distance_from_center'),
-                request_date=data['request_date']
-            )
 
         result = None
         hotel_ids = None
@@ -63,3 +44,24 @@ def send_info(message: Message):
         else:
             logger.error("Не удалось найти")
             bot.send_message(message.chat.id, 'Нет доступных отелей по вашему запросу.')
+
+        if data.get("command") in ['high', 'low']:
+            History.create(
+                user_id=message.from_user.id,
+                command=data.get('command'),
+                city=data.get('city'),
+                location_id=data.get('id_location'),
+                adults_qty=data.get('adults'),
+                children=data.get('child_amount', 0),
+                entry_date=data.get('entry'),
+                exit_date=data.get('exit'),
+                hotels_quantity=data.get('hotels_qty'),
+                photo_qty=data.get('photos', 0),
+                min_price=data.get('price_min_bestdeal', 0),
+                max_price=data.get('price_max_bestdeal', 0),
+                distance_from_center=data.get('center_distance', 0),
+                request_date=data.get('request_date')
+            )
+
+
+        bot.delete_state(message.from_user.id, message.chat.id)

@@ -1,4 +1,4 @@
-from peewee import Model, CharField, IntegerField, TextField, DateField, FloatField, SqliteDatabase
+from peewee import Model, CharField, IntegerField, TextField, DateTimeField, FloatField, SqliteDatabase
 
 
 sqlite_db = SqliteDatabase('tg_bot.db', pragmas={'journal_mode': "wal", 'cache_size': -1024 * 64})
@@ -13,17 +13,19 @@ class History(BaseModel):
     user_id = IntegerField()
     command = CharField()
     city = CharField()
-    location_id = CharField()
+    location_id = IntegerField()
     adults_qty = IntegerField()
-    children = TextField()
-    entry_date = DateField()
-    exit_date = DateField()
+    children = IntegerField()
+    entry_date = CharField()
+    exit_date = CharField()
     hotels_quantity = IntegerField()
-    photo_qty = IntegerField()
-    min_price = FloatField(null=True)
-    max_price = FloatField(null=True)
-    distance_from_center = FloatField(null=True)
-    request_date = DateField(null=True)
+    photo_qty = IntegerField(default=0)
+    min_price = IntegerField(null=True)
+    max_price = IntegerField(null=True)
+    distance_from_center = IntegerField(null=True)
+    request_date = DateTimeField()
 
 
 sqlite_db.create_tables([History])
+
+
