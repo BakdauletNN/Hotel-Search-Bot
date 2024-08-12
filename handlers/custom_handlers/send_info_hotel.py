@@ -9,12 +9,12 @@ from database.models import History
 
 @bot.message_handler(state=UserInfoState.final)
 def send_info(message: Message):
-    with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-        if 'photos' not in data or data['photos'] is None:
-            if message.text.isdigit() and 1 <= int(message.text) <= 5:
-                data['photos'] = int(message.text)
-            else:
-                data['photos'] = 0
+    if message.text.isdigit() and 1 <= int(message.text) <= 5:
+        with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
+            data['photos'] = int(message.text)
+    else:
+        with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
+            data['photos'] = 0
 
         result = None
         hotel_ids = None
@@ -47,7 +47,7 @@ def send_info(message: Message):
 
         if data.get("command") in ['high', 'low']:
             History.create(
-                user_id=message.from_user.id,
+                user_id=data.get('user_id_telegram'),
                 command=data.get('command'),
                 city=data.get('city'),
                 location_id=data.get('id_location'),
@@ -62,6 +62,5 @@ def send_info(message: Message):
                 distance_from_center=data.get('center_distance', 0),
                 request_date=data.get('request_date')
             )
-
 
         bot.delete_state(message.from_user.id, message.chat.id)

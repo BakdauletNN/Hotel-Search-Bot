@@ -3,7 +3,6 @@ import re
 from states.contact_information import UserInfoState
 
 
-
 @bot.callback_query_handler(func=lambda call: call.data.startswith("callback_data:"))
 def handle_location_callback(call):
     chosen_city = re.search(r'callback_data:(.*)', call.data).group(

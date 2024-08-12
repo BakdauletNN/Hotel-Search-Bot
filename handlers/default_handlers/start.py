@@ -1,6 +1,7 @@
 import telebot
 from loader import bot
 
+
 @bot.message_handler(commands=['start'])
 def start_settings(message):
     user_name = message.from_user.first_name

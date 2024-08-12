@@ -1,17 +1,13 @@
 from loader import bot
 from telebot.types import Message
-from database.models import History
-
-
-def get_history(user_id: int):
-    return History.select().where(History.user_id == user_id)
+from database.get_history import get_history_user
 
 
 @bot.message_handler(commands=['history'])
 def command_history(message: Message) -> None:
     bot.delete_state(message.from_user.id, message.chat.id)
     try:
-        history = get_history(message.from_user.id)
+        history = get_history_user(user_id_tg=message.from_user.id)
         if history.exists():
             response = "История запросов:\n"
             for record in history:
@@ -25,7 +21,7 @@ def command_history(message: Message) -> None:
                             f"\nДата выезда: {record.exit_date}" \
                             f"\nКол-во отелей: {record.hotels_quantity}" \
                             f"\nКол-во фоток: {record.photo_qty}" \
-                            f"\nМин прайс: {record. min_price}" \
+                            f"\nМин прайс: {record.min_price}" \
                             f"\nМакс прайс: {record.max_price}" \
                             f"\nРасстояние от центра: {record.distance_from_center} "
             bot.send_message(message.chat.id, response)

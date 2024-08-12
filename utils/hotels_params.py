@@ -5,11 +5,14 @@ import re
 
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 
+
 class APIError(Exception):
     pass
 
+
 def km_to_miles(km):
     return km / 1.60934
+
 
 @logger.catch()
 def get_data(data: dict, sort_type: str, filters: dict = None):
@@ -66,8 +69,10 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
 
         hotel_info = []
         hotel_ids = []
-        min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get("min") else None
-        max_price = float(filters.get("price", {}).get("max")) if filters and filters.get("price", {}).get("max") else None
+        min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get(
+            "min") else None
+        max_price = float(filters.get("price", {}).get("max")) if filters and filters.get("price", {}).get(
+            "max") else None
         distance_param_km = data.get('center_distance')
         distance_param_mi = km_to_miles(distance_param_km) if distance_param_km else None
 
@@ -78,9 +83,14 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
             one_day_price_str = price_options[0].get("formattedDisplayPrice", "N/A")
             one_day_price = float(re.sub(r'[^\d.]', '', one_day_price_str)) if one_day_price_str != "N/A" else None
             distance_from_center_str = property_data.get("destinationInfo", {}).get("distanceFromMessaging")
-            distance_from_center = float(distance_from_center_str.split(' ')[0]) if distance_from_center_str else None
+            if distance_from_center_str:
+                match = re.search(r'\d+(\.\d+)?', distance_from_center_str)
+                distance_from_center = float(match.group(0)) if match else None
+            else:
+                distance_from_center = None
 
-            if ((distance_param_mi is None or (distance_from_center is not None and distance_from_center <= distance_param_mi)) and
+            if ((distance_param_mi is None or (
+                    distance_from_center is not None and distance_from_center <= distance_param_mi)) and
                     (min_price is None or (one_day_price is not None and one_day_price >= min_price)) and
                     (max_price is None or (one_day_price is not None and one_day_price <= max_price))):
                 hotel_name = property_data["name"]

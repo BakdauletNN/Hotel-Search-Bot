@@ -10,16 +10,17 @@ from handlers.custom_handlers.history import command_history
 @bot.message_handler(commands=['low', 'high', 'bestdeal', 'history'])
 def commands(message: Message) -> None:
     command = message.text.strip('/')
-
     if command == 'history':
         bot.delete_state(message.from_user.id, message.chat.id)
         command_history(message)
     else:
+
         bot.delete_state(message.from_user.id, message.chat.id)
         bot.set_state(message.from_user.id, UserInfoState.user_city, message.chat.id)
 
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data.update({
+                'user_id_telegram': message.from_user.id,
                 'command': command,
                 'location_id': None,
                 'city': None,
