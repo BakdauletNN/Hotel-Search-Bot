@@ -2,6 +2,7 @@ from loader import bot
 from states.contact_information import UserInfoState
 from telebot.types import Message
 from datetime import datetime, date
+from database.models import History
 
 
 @bot.message_handler(state=UserInfoState.date_exit)
@@ -11,7 +12,7 @@ def exit_date(message: Message) -> None:
             with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
                 data['entry'] = message.text
             bot.send_message(message.chat.id, 'Дата въезда записана, введите дата выезда')
-            bot.set_state(message.from_user.id, UserInfoState.answer_hotel, message.chat.id)
+            bot.set_state(message.from_user.id, UserInfoState.get_hotels_amount, message.chat.id)
         else:
             bot.send_message(message.chat.id, 'Введенная дата должна быть не ранее текущей даты.'
                                           ' Попробуйте еще раз.')
