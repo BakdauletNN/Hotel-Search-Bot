@@ -30,8 +30,45 @@ default_handlers:
 Файл echo.py - Эхо 
 
 custom_handlers (Все обработчики)
-
+__init__.py - Порядок работы файлов
 Файл command_handler.py - Определяем команду, создаем data, получаем локацию пользователя
 Файл callback_data.py - управляет обработкой пользовательского выбора через инлайн-кнопки 
 Файл adults.py - Кол-во взрослых
-Файл children.    
+Файл children.py - Кол-во детей, так же их возраста
+Файл enrty_date.py - Здесь проверяем возраста детей
+Файл exit_date.py - Дата въезда 
+Файл check_hotels_amount.py - Дата выезда
+Файл quantity_hotels.py - Кол-во отелей
+Файл photos_amount.py - Кол-во фоток, если фото не нужны в этом же файле выдаем резльутаты
+Файл send_info_hotel.py - Отправка результатов так же добавляем записанные данные к БД
+Файл result.py - Отправка результатов с фотками
+Файл min_price_bestdeal.py - Мин цена
+Файл max_price_bestdeal.py - Макс цена
+Файл distance_bestdeal.py - Растояние от центра и отправка отелей
+Файл history.py - Функция для работы с БД
+
+
+4)keyboards:
+
+Файл keyboards.py - Реализация Inline кнопок
+
+5)states:
+
+Файл contact.information.py - Состоянии для реализации диалога
+
+6) utils:
+
+Файл get_city_user.py - Парсинг данных получаем город из RapidAPI
+Файл hotels_params.py - Передаем данные из data, парсинг отелей точнее id, название, цена за 1 сутки
+Файл hotel_information.py - Получаем ссылку, фотки, локацию
+Файл set_bot_commands.py - Команды бота
+
+
+Напримере работа команды /high
+
+Вводим город
+
+
+
+
+
