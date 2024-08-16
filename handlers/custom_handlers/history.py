@@ -3,7 +3,6 @@ from telebot.types import Message
 from database.get_history import get_history_user
 
 
-@bot.message_handler(commands=['history'])
 def command_history(message: Message) -> None:
     bot.delete_state(message.from_user.id, message.chat.id)
     try:

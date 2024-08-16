@@ -7,14 +7,16 @@ from loguru import logger
 from database.models import History
 
 
-@bot.message_handler(state=UserInfoState.final)
-def send_info(message: Message):
-    if message.text.isdigit() and 1 <= int(message.text) <= 5:
-        with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-            data['photos'] = int(message.text)
-    else:
-        with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
-            data['photos'] = 0
+# @bot.message_handler(state=UserInfoState.final)
+def send_info(message: Message, photos=None):
+    if photos is None:
+        if not message.text.isdigit() or not 1 <= int(message.text) <= 5:
+            bot.send_message(message.chat.id, 'Некорректный ввод. Пожалуйста, введите число от 1 до 5.')
+            return
+        photos = int(message.text)
+
+    with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
+        data.update({'photos': photos})
 
         result = None
         hotel_ids = None
@@ -45,6 +47,7 @@ def send_info(message: Message):
             logger.error("Не удалось найти")
             bot.send_message(message.chat.id, 'Нет доступных отелей по вашему запросу.')
 
+        # Сохранение истории
         if data.get("command") in ['high', 'low']:
             History.create(
                 user_id=data.get('user_id_telegram'),
@@ -63,4 +66,4 @@ def send_info(message: Message):
                 request_date=data.get('request_date')
             )
 
-        bot.delete_state(message.from_user.id, message.chat.id)
+    bot.delete_state(message.from_user.id, message.chat.id)

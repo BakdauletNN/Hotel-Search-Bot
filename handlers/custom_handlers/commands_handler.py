@@ -14,7 +14,6 @@ def commands(message: Message) -> None:
         bot.delete_state(message.from_user.id, message.chat.id)
         command_history(message)
     else:
-
         bot.delete_state(message.from_user.id, message.chat.id)
         bot.set_state(message.from_user.id, UserInfoState.user_city, message.chat.id)
 

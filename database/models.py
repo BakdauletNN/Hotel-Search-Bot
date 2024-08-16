@@ -1,7 +1,7 @@
 from peewee import Model, CharField, IntegerField, TextField, DateTimeField, FloatField, SqliteDatabase
 
 
-sqlite_db = SqliteDatabase('tg_bot.db', pragmas={'journal_mode': "wal", 'cache_size': -1024 * 64})
+sqlite_db = SqliteDatabase('database/tg_bot.db', pragmas={'journal_mode': "wal", 'cache_size': -1024 * 64})
 
 
 class BaseModel(Model):

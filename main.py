@@ -1,8 +1,7 @@
 from loader import bot
 import handlers
-from handlers.custom_handlers.history import command_history
 from utils.set_bot_commands import set_default_commands
-from database import models
+import database
 
 
 if __name__ == '__main__':
