@@ -4,7 +4,7 @@ from telebot.types import Message
 import datetime
 from utils.get_city_user import city_info
 from keyboards.keyboards import get_locations
-from handlers.custom_handlers.history import command_history
+from utils.history import command_history
 
 
 @bot.message_handler(commands=['low', 'high', 'bestdeal', 'history'])

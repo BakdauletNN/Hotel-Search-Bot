@@ -67,6 +67,10 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
         json_data = response.json()
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
 
+        properties.sort(key=lambda x: float(
+            re.sub(r'[^\d.]', '', x.get("price", {}).get("options", [{}])[0].get("formattedDisplayPrice", "0"))),
+                        reverse=True)
+
         hotel_info = []
         hotel_ids = []
         min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get(

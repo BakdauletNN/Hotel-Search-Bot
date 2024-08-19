@@ -18,9 +18,6 @@ def send_info(message: Message, photos=None):
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
         data.update({'photos': photos})
 
-        result = None
-        hotel_ids = None
-
         if data.get('command') == 'high':
             bot.send_message(message.chat.id, 'Дорогие отели')
             result, hotel_ids = get_data(data, sort_type="PROPERTY_CLASS")
@@ -31,7 +28,6 @@ def send_info(message: Message, photos=None):
             bot.set_state(message.from_user.id, UserInfoState.price_min, message.chat.id)
             bot.send_message(message.chat.id, 'Введите минимальную стоимость в долларах')
             return
-
         if result and hotel_ids:
             bot.send_message(message.chat.id, result)
             for hotel_id in hotel_ids:

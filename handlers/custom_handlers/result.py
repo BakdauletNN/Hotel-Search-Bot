@@ -1,7 +1,7 @@
 from loader import bot
 from states.contact_information import UserInfoState
 from telebot.types import Message
-from handlers.custom_handlers.send_info_hotel import send_info
+from utils.send_info_hotel import send_info
 
 
 @bot.message_handler(state=UserInfoState.final)
