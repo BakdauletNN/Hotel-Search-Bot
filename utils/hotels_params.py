@@ -67,10 +67,6 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
         json_data = response.json()
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
 
-        properties.sort(key=lambda x: float(
-            re.sub(r'[^\d.]', '', x.get("price", {}).get("options", [{}])[0].get("formattedDisplayPrice", "0"))),
-                        reverse=True)
-
         hotel_info = []
         hotel_ids = []
         min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get(
@@ -84,6 +80,7 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
             price_options = property_data.get("price", {}).get("options", [])
             if not price_options:
                 continue
+
             one_day_price_str = price_options[0].get("formattedDisplayPrice", "N/A")
             one_day_price = float(re.sub(r'[^\d.]', '', one_day_price_str)) if one_day_price_str != "N/A" else None
             distance_from_center_str = property_data.get("destinationInfo", {}).get("distanceFromMessaging")
@@ -108,14 +105,18 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
                 })
                 hotel_ids.append(hotel_id)
 
+        hotel_info.sort(key=lambda x: x, reverse=True)
+
         if not hotel_info:
+            logger.error("Не удалось найти подходящие отели.")
             return None, []
 
         result = "\n".join([
             f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
             for info in hotel_info])
+
         return result, hotel_ids
 
     except requests.RequestException as err:
-        logger.error(f"Error occurred: {err}")
+        logger.error(f"Ошибка при запросе к API: {err}")
         return None, []
