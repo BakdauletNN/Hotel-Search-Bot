@@ -3,6 +3,7 @@ from config_data.config import API_KEY
 import requests
 import re
 
+
 api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 
 
@@ -25,6 +26,7 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
     adults = data.get('adults')
     children_ages = data.get('child_age', [])
     hotels_amount_param = data.get('hotels_qty', 1)
+    hotels_amount_param = int(hotels_amount_param)
     handle_location_callback = data.get('id_location')
 
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
@@ -76,7 +78,7 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
         distance_param_km = data.get('center_distance')
         distance_param_mi = km_to_miles(distance_param_km) if distance_param_km else None
 
-        for i, property_data in enumerate(properties[:int(hotels_amount_param)]):
+        for property_data in properties:
             price_options = property_data.get("price", {}).get("options", [])
             if not price_options:
                 continue
@@ -98,24 +100,32 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
                 hotel_id = property_data['id']
 
                 hotel_info.append({
-                    "Отель": i + 1,
                     "Имя отеля": hotel_name,
                     "ID отеля": hotel_id,
-                    "Цена за 1 сутки": one_day_price_str
+                    "Цена за 1 сутки": one_day_price_str,
+                    "Цена": one_day_price
                 })
                 hotel_ids.append(hotel_id)
 
-        hotel_info.sort(key=lambda x: x, reverse=True)
+        sort_reverse = (sort_type == "PROPERTY_CLASS")
+        hotel_info = [info for info in hotel_info if 'Цена' in info]
 
         if not hotel_info:
-            logger.error("Не удалось найти подходящие отели.")
+            return None, []
+
+        hotel_info.sort(key=lambda x: x["Цена"], reverse=sort_reverse)
+
+        hotel_info = hotel_info[:hotels_amount_param]
+
+        if not hotel_info:
             return None, []
 
         result = "\n".join([
-            f"Отель {info['Отель']}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
-            for info in hotel_info])
+            f"Отель {i + 1}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
+            for i, info in enumerate(hotel_info)
+        ])
 
-        return result, hotel_ids
+        return result, hotel_ids[:hotels_amount_param]
 
     except requests.RequestException as err:
         logger.error(f"Ошибка при запросе к API: {err}")

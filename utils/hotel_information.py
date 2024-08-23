@@ -8,17 +8,18 @@ api = {'X-RapidApi-Key': API_KEY, 'X-RapidAPI-Host': "hotels4.p.rapidapi.com"}
 
 @logger.catch()
 def hotel_info(data: dict):
-    id_hotel = data.get('property_id')
+    property_id = data.get('property_id')
     photos_amount_user = data.get('photos', 0)
     if photos_amount_user is None:
-        photos_amount_user = data.get('photos')
+        photos_amount_user = 0
+
     url = "https://hotels4.p.rapidapi.com/properties/v2/get-summary"
     payload = {
         "currency": "USD",
         "eapid": 1,
         "locale": "en_US",
         "siteId": 300000001,
-        "propertyId": id_hotel
+        "propertyId": property_id
     }
     headers = {
         "x-rapidapi-key": API_KEY,
@@ -33,19 +34,19 @@ def hotel_info(data: dict):
         properties = json_data.get("data", {}).get("propertyInfo", {})
 
         if not properties:
-            logger.error(f"Информации по id не найдено: {id_hotel}")
+            logger.error(f"No information found for property_id: {property_id}")
             return None
 
-        name = properties.get('summary', {}).get('name', "")
-        location = properties.get("summary", {}).get("location", {}).get("address", {}).get("addressLine", "")
+        name = properties.get('summary', {}).get('name', "Unknown")
+        location = properties.get("summary", {}).get("location", {}).get("address", {}).get("addressLine", "Unknown")
         map_url = properties.get("summary", {}).get("location", {}).get("staticImage", {}).get("url", "")
-        photos = properties.get('propertyGallery', {}).get('images', [])[:int(photos_amount_user)]
+        photos = properties.get('propertyGallery', {}).get('images', [])[:photos_amount_user]
 
         photo_urls = [photo.get('image', {}).get('url', '') for photo in photos]
 
-        hotel_info_str = f"Name hotel: {name}\nLocation: {location}\nMap url: {map_url}"
+        hotel_info_str = f"Hotel Name: {name}\nLocation: {location}\nMap URL: {map_url}"
         return hotel_info_str, photo_urls
 
     except requests.RequestException as err:
-        logger.error(f"Ошибка при запросе данных отеля: {err}")
+        logger.error(f"Error fetching hotel data: {err}")
         return None

@@ -2,7 +2,6 @@ from loader import bot
 from states.contact_information import UserInfoState
 from telebot.types import Message
 from datetime import datetime, date
-from database.models import History
 
 
 @bot.message_handler(state=UserInfoState.date_exit)
