@@ -8,11 +8,13 @@ from utils.history import command_history
 
 
 @bot.message_handler(commands=['low', 'high', 'bestdeal', 'history'])
-def commands(message: Message) -> None:
+def commands(message: Message):
     command = message.text.strip('/')
     if command == 'history':
         bot.delete_state(message.from_user.id, message.chat.id)
-        command_history(message)
+        answer_history = command_history(message)
+        bot.send_message(message.from_user.id, answer_history)
+
     else:
         bot.delete_state(message.from_user.id, message.chat.id)
         bot.set_state(message.from_user.id, UserInfoState.user_city, message.chat.id)

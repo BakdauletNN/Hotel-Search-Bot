@@ -2,7 +2,7 @@ from database.models import History
 
 
 def add(data: dict):
-    if data.get("command") in ['low', 'high', 'bestdeal']:
+    if data.get("command") in ["low", "high", "bestdeal"]:
         History.create(
             user_id=data.get('user_id_telegram'),
             command=data.get('command'),

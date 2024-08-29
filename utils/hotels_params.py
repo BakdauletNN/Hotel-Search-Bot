@@ -20,6 +20,10 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
     entry_date = data.get('entry')
     exit_date = data.get('exit')
 
+    if not entry_date or not exit_date:
+        logger.error("Отсутствуют даты въезда или выезда")
+        return None, []
+
     entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
     exit_day, exit_month, exit_year = map(int, exit_date.split('.'))
 
@@ -67,14 +71,20 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
         response = requests.post(url, json=payload, headers=headers)
         response.raise_for_status()
         json_data = response.json()
+
+        if not json_data or "data" not in json_data:
+            logger.error("Не удалось получить данные из API. Ответ: %s", json_data)
+            return None, []
+
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
+        if not properties:
+            logger.warning("Не найдено отелей, соответствующих запросу")
+            return None, []
 
         hotel_info = []
         hotel_ids = []
-        min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get(
-            "min") else None
-        max_price = float(filters.get("price", {}).get("max")) if filters and filters.get("price", {}).get(
-            "max") else None
+        min_price = float(filters.get("price", {}).get("min")) if filters and filters.get("price", {}).get("min") else None
+        max_price = float(filters.get("price", {}).get("max")) if filters and filters.get("price", {}).get("max") else None
         distance_param_km = data.get('center_distance')
         distance_param_mi = km_to_miles(distance_param_km) if distance_param_km else None
 

@@ -14,9 +14,11 @@ def send_info(data: dict):
         result_str += 'Дешевые отели\n'
         result, hotel_ids = get_data(data, sort_type="PRICE_LOW_TO_HIGH")
 
-    if not result or not hotel_ids:
+    if not result:
         return 'Произошла ошибка при получении данных отеля.'
-    # сообщение со списком отелей
+    if not hotel_ids:
+        return 'Не удалось найти отели, соответствующие вашему запросу.'
+
     messages = [result_str + result]
     for hotel_id in hotel_ids:
         hotel_data = {"property_id": hotel_id, "photos": data.get('photos')}

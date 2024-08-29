@@ -1,4 +1,3 @@
-from loader import bot
 from telebot.types import Message
 from database.get_history import get_history_user
 
@@ -21,7 +20,6 @@ def command_history(message: Message):
                         f"\nМин прайс: {record.min_price}" \
                         f"\nМакс прайс: {record.max_price}" \
                         f"\nРасстояние от центра: {record.distance_from_center} "
-        bot.send_message(message.chat.id, response)
+        return response
     else:
-        bot.send_message(message.chat.id, "История не найдена.")
-
+        return "История не найдена."
