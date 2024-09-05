@@ -26,6 +26,7 @@ class History(BaseModel):
     request_date = DateTimeField()
 
 
+sqlite_db.drop_tables([History])
 sqlite_db.create_tables([History])
 
 
