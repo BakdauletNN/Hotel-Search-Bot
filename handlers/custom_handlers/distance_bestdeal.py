@@ -2,8 +2,6 @@ from loader import bot
 from states.contact_information import UserInfoState
 from telebot.types import Message
 from utils.hotels_params import get_data
-from utils.hotel_information import hotel_info
-from database.add_to_db import add
 
 
 @bot.message_handler(state=UserInfoState.distance)
@@ -12,7 +10,6 @@ def distance_from_center(message: Message):
         distance_km = float(message.text)
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['center_distance'] = distance_km
-            add(data)
 
         bot.send_message(message.chat.id, 'Расстояние от центра записано. Ждите результаты...')
         filters = {
