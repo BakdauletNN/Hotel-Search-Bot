@@ -21,7 +21,6 @@ def command_history(message: Message):
                         f"\nМин прайс: {record.min_price}" \
                         f"\nМакс прайс: {record.max_price}" \
                         f"\nРасстояние от центра: {record.distance_from_center} "
-        print('Here responce to command history')
         return response
     else:
         print("История не найдена")

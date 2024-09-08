@@ -1,22 +1,13 @@
 from database.models import History
-import logging
+from loader import logger
 
 
 def add(data: dict):
-    # Добавляем логирование для отслеживания работы функции
-    logging.info(f"Attempting to add data to History: {data}")
-
-    # Проверяем, что команда присутствует и она одна из разрешенных
-    command = data.get("command")
-    if command not in ["low", "high", "bestdeal"]:
-        logging.warning(f"Command '{command}' is not valid for adding to History.")
-        return
-
-    try:
-        # Создаем запись в базе данных
-        new_record = History.create(
+    logger.info(f"join data to db")
+    if data.get("command") in ['low', 'high', 'bestdeal']:
+        History.create(
             user_id=data.get('user_id_telegram'),
-            command=command,
+            command=data.get('command'),
             city=data.get('city'),
             location_id=data.get('id_location'),
             adults_qty=data.get('adults'),
@@ -30,10 +21,3 @@ def add(data: dict):
             distance_from_center=data.get('center_distance', 0),
             request_date=data.get('request_date')
         )
-        logging.info(f"Record added to History successfully: {new_record}")
-        return new_record
-    except Exception as e:
-        # Логируем ошибку, если не удалось создать запись
-        logging.error(f"Error adding data to History: {e}")
-        raise 'Не удалось подключиться к БД'
-
