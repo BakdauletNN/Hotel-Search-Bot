@@ -1,99 +1,96 @@
-Telegram Bot для поиска отелей
+Telegram Bot for Hotel Search
 
-Структура проекта
+Project Structure
 
-Корневые файлы
+Root Files
 
-.env.template: Шаблон для переменных окружения. После клонирования репозитория удалите суффикс .template и введите ваш токен и API ключ.
+.env.template: Template for environment variables. After cloning the repository, remove the .template suffix and enter your token and API key.
 
-loader.py: Обеспечивает базовую инфраструктуру бота, включая логирование, управление состояниями пользователей и другие важные функции.
+loader.py: Provides the bot's basic infrastructure, including logging, user state management, and other essential functions.
 
-requirements.txt: Содержит список зависимостей, необходимых для работы Telegram бота.
+requirements.txt: Contains a list of dependencies required for the Telegram bot to run.
 
-debug.log: Файл логов, в котором хранится история работы бота.
+debug.log: Log file storing the bot's operational history.
 
-main.py: Запускает бота и создает базу данных.
+main.py: Starts the bot and initializes the database.
 
+Folders and Files
 
-Папки и файлы
-
-
-1)config_data
-
-config.py: Вставьте сюда ваш API ключ и токен. Также определите набор команд для бота.
+config_data
 
 
-2)database
+config.py: Insert your API key and token here. Also, define the bot's command set.
 
-models.py: Управление операциями базы данных с использованием библиотеки Peewee ORM.
+database
 
-get_history.py: Получение истории пользователя из базы данных по его ID.
+models.py: Manages database operations using the Peewee ORM library.
 
-tg_bot.db: Файл базы данных для хранения данных пользователей и другой информации, связанной с ботом.
+get_history.py: Retrieves the user's history from the database based on their ID.
 
+tg_bot.db: Database file for storing user data and other bot-related information.
 
-3)handlers:
+handlers
 
 default_handlers:
 
-start.py: Обработчик приветственного сообщения.
 
-help.py: Выводит список доступных команд.
+start.py: Handles the welcome message.
 
-echo.py: Повторяет любое сообщение, не соответствующее команде.
+help.py: Displays a list of available commands.
 
+echo.py: Echoes any message that does not match a command.
 
-custom_handlers (Все пользовательские обработчики)
-
-init.py: Управляет порядком выполнения обработчиков.
-
-command_handler.py: Определяет команды, создает объекты данных и получает местоположение пользователя.
-
-callback_data.py: Управляет выбором пользователя через inline-кнопки.
-
-adults.py: Обрабатывает количество взрослых для поиска.
-
-children.py: Обрабатывает количество детей и их возраст.
-
-entry_date.py: Проверяет правильность введенных данных о возрасте детей.
-
-exit_date.py: Обрабатывает дату въезда.
-
-check_hotels_amount.py: Обрабатывает дату выезда.
-
-quantity_hotels.py: Указывает количество отелей, которые нужно найти.
-
-photos_amount.py: Обрабатывает количество запрашиваемых фотографий. Если фотографии не нужны, результаты предоставляются сразу.
-
-send_info_hotel.py: Отправляет результаты поиска и сохраняет данные в базе данных.
-
-result.py: Отправляет результаты поиска с фотографиями.
-
-min_price_bestdeal.py: Указывает минимальную цену для поиска лучших предложений.
-
-max_price_bestdeal.py: Указывает максимальную цену для поиска лучших предложений.
-
-distance_bestdeal.py: Указывает расстояние от центра города и отправляет результаты поиска отелей.
-
-history.py: Обрабатывает операции с базой данных, связанные с историей поиска пользователя.
+custom_handlers (All custom handlers):
 
 
-4)keyboards
+init.py: Manages the execution order of handlers.
 
-keyboards.py: Реализует inline-кнопки для взаимодействия с пользователем.
+command_handler.py: Defines commands, creates data objects, and obtains the user’s location.
+
+callback_data.py: Manages user selections via inline buttons.
+
+adults.py: Handles the number of adults for the search.
+
+children.py: Manages the number of children and their ages.
+
+entry_date.py: Validates the age data for children.
+
+exit_date.py: Manages the check-in date.
+
+check_hotels_amount.py: Manages the check-out date.
+
+quantity_hotels.py: Specifies the number of hotels to find.
+
+photos_amount.py: Manages the requested number of photos. If no photos are required, results are provided immediately.
+
+send_info_hotel.py: Sends search results and saves data to the database.
+
+result.py: Sends search results with photos.
 
 
-5)states
 
-contact_information.py: Управляет состояниями для ведения диалога с пользователем.
+min_price_bestdeal.py: Specifies the minimum price for finding the best deals.
 
+max_price_bestdeal.py: Specifies the maximum price for finding the best deals.
 
-6)utils
+distance_bestdeal.py: Specifies the distance from the city center and sends hotel search results.
 
-get_city_user.py: Парсит данные города из RapidAPI на основе ввода пользователя.
+history.py: Manages database operations related to the user’s search history.
 
-hotels_params.py: Передает данные, введенные пользователем, парсит информацию об отелях, включая ID, название и цену за ночь.
+keyboards
 
-hotel_information.py: Получает информацию об отеле, такую как ссылки, фотографии и местоположение.
+keyboards.py: Implements inline buttons for user interaction.
 
-set_bot_commands.py: Определяет команды для бота.
+states
+
+contact_information.py: Manages states for interacting with the user.
+
+utils
+
+get_city_user.py: Parses city data from RapidAPI based on user input.
+
+hotels_params.py: Transfers user-entered data and parses hotel information, including ID, name, and nightly rate.
+
+hotel_information.py: Retrieves hotel information, such as links, photos, and location.
+
+set_bot_commands.py: Defines commands for the bot.
