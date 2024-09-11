@@ -1,5 +1,6 @@
 from utils.hotel_information import hotel_info
 from utils.hotels_params import get_data
+from database.add_to_db import add
 
 
 def send_info(data: dict):
@@ -18,6 +19,8 @@ def send_info(data: dict):
         return 'Произошла ошибка при получении данных отеля.'
     if not hotel_ids:
         return 'Не удалось найти отели, соответствующие вашему запросу.'
+
+    add(data)
 
     messages = [result_str + result]
     for hotel_id in hotel_ids:
