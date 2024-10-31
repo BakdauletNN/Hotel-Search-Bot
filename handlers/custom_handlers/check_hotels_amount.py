@@ -12,8 +12,8 @@ def get_amount_hotels(message: Message):
                 data['exit'] = message.text
 
                 bot.set_state(message.from_user.id, UserInfoState.photo, message.chat.id)
-                bot.send_message(message.chat.id, 'Дата выезда записана, введите кол-во отелей, не больше 5')
+                bot.send_message(message.chat.id, 'Departure date is recorded, enter the number of hotels, no more than 5')
             else:
-                bot.send_message(message.chat.id, 'Дата выезда должна быть позже даты въезда. Попробуйте еще раз.')
+                bot.send_message(message.chat.id, 'The departure date must be later than the entry date. try again.')
     except ValueError:
-        bot.send_message(message.chat.id, 'Некорректный формат даты. Введите дату в формате dd.mm.yyyy.')
+        bot.send_message(message.chat.id, 'Invalid date format. Enter the date in the format dd.mm.yyyy.')

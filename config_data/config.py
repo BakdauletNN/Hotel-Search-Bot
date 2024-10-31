@@ -3,16 +3,16 @@ from dotenv import load_dotenv, find_dotenv
 
 
 if not find_dotenv():
-    exit("Переменные окружения не загружены, так как отсутствует файл .env")
+    exit("Environment variables are not loaded because the .env file is missing")
 else:
     load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 API_KEY = os.getenv("API_KEY")
 DEFAULT_COMMANDS = (
-    ("start", "Запустить бота"),
-    ("help", "Вывести справку"),
-    ("low", 'Минимальные услуги'),
-    ("high", 'Максимальные услуги'),
-    ("bestdeal", 'Свои параметры'),
-    ("history", 'История')
+    ("start", "Launch bot"),
+    ("help", "Get help"),
+    ("low", 'Minimum services'),
+    ("high", 'Maximum services'),
+    ("bestdeal", 'Your parameters'),
+    ("history", 'History')
 )

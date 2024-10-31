@@ -14,7 +14,7 @@ def distance_from_center(message: Message):
             data['center_distance'] = distance_km
             add(data)
 
-        bot.send_message(message.chat.id, 'Расстояние от центра записано. Ждите результаты...')
+        bot.send_message(message.chat.id, 'The distance from the center is recorded. Wait for the results...')
         filters = {
             "price": {
                 "max": data.get('price_max_bestdeal'),
@@ -24,7 +24,7 @@ def distance_from_center(message: Message):
         try:
             result, hotel_ids = get_data(data, sort_type="DISTANCE", filters=filters)
         except Exception as e:
-            bot.send_message(message.chat.id, f'Ошибка при получении данных отеля: {str(e)}')
+            bot.send_message(message.chat.id, f'Error while retrieving hotel data: {str(e)}')
             return
 
         if result and hotel_ids:
@@ -34,7 +34,7 @@ def distance_from_center(message: Message):
                 try:
                     hotel_info_result = hotel_info(hotel_data)
                 except Exception as e:
-                    bot.send_message(message.chat.id, f'Ошибка при получении информации об отеле: {str(e)}')
+                    bot.send_message(message.chat.id, f'Error while retrieving hotel information: {str(e)}')
                     continue
 
                 if hotel_info_result:
@@ -44,12 +44,12 @@ def distance_from_center(message: Message):
                         for photo_url in photo_urls:
                             bot.send_photo(message.chat.id, photo_url)
                 else:
-                    bot.send_message(message.chat.id, 'Нет информации об этом отеле.')
+                    bot.send_message(message.chat.id, 'No information about this hotel.')
         else:
-            bot.send_message(message.chat.id, 'Нет доступных отелей по вашему запросу.')
+            bot.send_message(message.chat.id, 'There are no hotels available matching your request.')
 
         bot.delete_state(message.from_user.id, message.chat.id)
     except ValueError:
-        bot.send_message(message.chat.id, 'Некорректное значение, пожалуйста введите число.')
+        bot.send_message(message.chat.id, 'Invalid value, please enter a number.')
     except Exception as e:
-        bot.send_message(message.chat.id, f'Произошла ошибка: {str(e)}')
+        bot.send_message(message.chat.id, f'An error has occurred: {str(e)}')

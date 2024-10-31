@@ -3,25 +3,23 @@ from database.get_history import get_history_user
 
 
 def command_history(message: Message):
-    print(f"Запрос истории для пользователя {message.from_user.id}")
     history = get_history_user(user_id_tg=message.from_user.id)
     if history:
-        response = "История запросов:\n"
+        response = "Query history:\n"
         for record in history:
-            response += f"\nКоманда: {record.command}" \
-                        f"\nГород: {record.city}" \
-                        f"\nДата запроса: {record.request_date.strftime('%Y-%m-%d')}" \
-                        f"\nАйди локации: {record.location_id}" \
-                        f"\nКол-во взрослых: {record.adults_qty}" \
-                        f"\nКол-во детей: {record.children}" \
-                        f"\nДата въезда: {record.entry_date}" \
-                        f"\nДата выезда: {record.exit_date}" \
-                        f"\nКол-во отелей: {record.hotels_quantity}" \
-                        f"\nКол-во фоток: {record.photo_qty}" \
-                        f"\nМин прайс: {record.min_price}" \
-                        f"\nМакс прайс: {record.max_price}" \
-                        f"\nРасстояние от центра: {record.distance_from_center} "
+            response += f"\nCommand: {record.command}" \
+                        f"\nCity: {record.city}" \
+                        f"\nDate request: {record.request_date.strftime('%Y-%m-%d')}" \
+                        f"\nId Location: {record.location_id}" \
+                        f"\nQty adults: {record.adults_qty}" \
+                        f"\nQty child: {record.children}" \
+                        f"\nEntry date: {record.entry_date}" \
+                        f"\nDeparture date: {record.exit_date}" \
+                        f"\nNumber of hotels: {record.hotels_quantity}" \
+                        f"\nNumber of photos: {record.photo_qty}" \
+                        f"\nMin price: {record.min_price}" \
+                        f"\nMax price: {record.max_price}" \
+                        f"\nDistance from center: {record.distance_from_center} "
         return response
     else:
-        print("История не найдена")
-        return "История не найдена."
+        return "History not found."

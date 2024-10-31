@@ -9,9 +9,9 @@ def adults(message: Message) -> None:
         bot.set_state(message.from_user.id, UserInfoState.amount_child, message.chat.id)
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['adults'] = message.text
-        bot.send_message(message.chat.id, 'Имеется ли у вас дети? (да/нет)')
+        bot.send_message(message.chat.id, 'Do you have children? (yes/no)')
     else:
-        bot.send_message(message.chat.id, 'Некорректный ввод')
+        bot.send_message(message.chat.id, 'Invalid input')
 
 
 

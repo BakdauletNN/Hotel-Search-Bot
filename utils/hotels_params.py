@@ -21,7 +21,7 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
     exit_date = data.get('exit')
 
     if not entry_date or not exit_date:
-        logger.error("Отсутствуют даты въезда или выезда")
+        logger.error("There are no entry or exit dates")
         return None, []
 
     entry_day, entry_month, entry_year = map(int, entry_date.split('.'))
@@ -73,12 +73,12 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
         json_data = response.json()
 
         if not json_data or "data" not in json_data:
-            logger.error("Не удалось получить данные из API. Ответ: %s", json_data)
+            logger.error("Failed to retrieve data from API. Answer: %s", json_data)
             return None, []
 
         properties = json_data.get("data", {}).get("propertySearch", {}).get("properties", [])
         if not properties:
-            logger.warning("Не найдено отелей, соответствующих запросу")
+            logger.warning("No hotels found matching your request")
             return None, []
 
         hotel_info = []
@@ -110,20 +110,20 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
                 hotel_id = property_data['id']
 
                 hotel_info.append({
-                    "Имя отеля": hotel_name,
-                    "ID отеля": hotel_id,
-                    "Цена за 1 сутки": one_day_price_str,
-                    "Цена": one_day_price
+                    "Hotel name": hotel_name,
+                    "ID Hotel": hotel_id,
+                    "Price for 1 day": one_day_price_str,
+                    "Price": one_day_price
                 })
                 hotel_ids.append(hotel_id)
 
         sort_reverse = (sort_type == "PROPERTY_CLASS")
-        hotel_info = [info for info in hotel_info if 'Цена' in info]
+        hotel_info = [info for info in hotel_info if 'Price' in info]
 
         if not hotel_info:
             return None, []
 
-        hotel_info.sort(key=lambda x: x["Цена"], reverse=sort_reverse)
+        hotel_info.sort(key=lambda x: x["Price"], reverse=sort_reverse)
 
         hotel_info = hotel_info[:hotels_amount_param]
 
@@ -131,12 +131,12 @@ def get_data(data: dict, sort_type: str, filters: dict = None):
             return None, []
 
         result = "\n".join([
-            f"Отель {i + 1}: {info['Имя отеля']}, ID: {info['ID отеля']}, Цена за 1 сутки: {info['Цена за 1 сутки']}"
+            f"Hotel {i + 1}: {info['Hotel name']}, ID: {info['ID Hotel']}, Price for 1 day: {info['Price for 1 day']}"
             for i, info in enumerate(hotel_info)
         ])
 
         return result, hotel_ids[:hotels_amount_param]
 
     except requests.RequestException as err:
-        logger.error(f"Ошибка при запросе к API: {err}")
+        logger.error(f"Error when requesting to API: {err}")
         return None, []

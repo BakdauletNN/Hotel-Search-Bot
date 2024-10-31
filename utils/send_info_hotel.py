@@ -9,16 +9,16 @@ def send_info(data: dict):
     hotel_ids = None
 
     if data.get('command') == 'high':
-        result_str += 'Дорогие отели\n'
+        result_str += 'Expensive hotels\n'
         result, hotel_ids = get_data(data, sort_type="PROPERTY_CLASS")
     elif data.get('command') == 'low':
-        result_str += 'Дешевые отели\n'
+        result_str += 'Cheap hotels\n'
         result, hotel_ids = get_data(data, sort_type="PRICE_LOW_TO_HIGH")
 
     if not result:
-        return 'Произошла ошибка при получении данных отеля.'
+        return 'An error occurred while retrieving hotel data.'
     if not hotel_ids:
-        return 'Не удалось найти отели, соответствующие вашему запросу.'
+        return 'We couldnt find any hotels matching your request..'
 
     add(data)
 

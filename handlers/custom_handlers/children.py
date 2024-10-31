@@ -5,12 +5,14 @@ from telebot.types import Message
 
 @bot.message_handler(state=UserInfoState.amount_child)
 def child(message: Message) -> None:
-    if message.text.lower() == 'нет':
-        bot.send_message(message.from_user.id, 'Понял, детей с собой нету.Введите дату въезда')
+    if message.text.lower() == 'no':
+        bot.send_message(message.from_user.id, 'Got it, I don’t have any children with me. Enter your entry date')
         bot.set_state(message.from_user.id, UserInfoState.date_exit, message.chat.id)
-    elif message.text.lower() == 'да':
-        bot.send_message(message.chat.id, 'Кол-во детей')
+    elif message.text.lower() == 'yes':
+        bot.send_message(message.chat.id, 'Number of children')
         bot.set_state(message.from_user.id, UserInfoState.age_child, message.chat.id)
+    else:
+        bot.send_message(message.chat.id, 'Yes or No')
 
 
 @bot.message_handler(state=UserInfoState.age_child)
@@ -20,7 +22,7 @@ def age_children(message: Message) -> None:
             data['child_amount'] = message.text
 
         bot.set_state(message.from_user.id, UserInfoState.date_entry, message.chat.id)
-        bot.send_message(message.chat.id, 'Кол-во записана, Теперь введите возраст детей через пробел')
+        bot.send_message(message.chat.id, 'The number is recorded, Now enter the age of the children separated by a space')
 
     else:
-        bot.send_message(message.chat.id, 'Кол-во может быть числом')
+        bot.send_message(message.chat.id, 'Qty can be a number')

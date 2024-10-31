@@ -34,14 +34,14 @@ def city_info(name_city) -> Union[None, List[Dict[str, Union[str, int]]]]:
         if response.status_code == requests.codes.ok:
             locations = response.json().get('sr', [])
             filtered_locations = [
-                {"ID": item['gaiaId'], "название": item['regionNames']['fullName']}
+                {"ID": item['gaiaId'], "name": item['regionNames']['fullName']}
                 for item in locations
                 if item['type'] in ['CITY', 'NEIGHBORHOOD']
             ]
             if not filtered_locations:
                 return None
             else:
-                return filtered_locations  ## TODO вернуть список словарей [{ID, название}, {ID, название}...]
+                return filtered_locations
         elif response.status_code == 401:
             raise APIError('API Key is not authorized (Error 401)')
         else:

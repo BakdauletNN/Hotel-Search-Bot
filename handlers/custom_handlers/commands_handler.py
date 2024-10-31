@@ -36,7 +36,7 @@ def commands(message: Message):
                 'distance_from_center': None,
                 'request_date': datetime.datetime.now().strftime('%Y-%m-%d'),
             })
-            bot.send_message(message.chat.id, "Введите город:")
+            bot.send_message(message.chat.id, "Enter city:")
 
 
 @bot.message_handler(state=UserInfoState.user_city)
@@ -46,6 +46,6 @@ def get_user_city(message: Message) -> None:
             data['city'] = message.text
             locations = city_info(message.text)
             markup = get_locations(locations)
-            bot.send_message(message.chat.id, 'Выберите локацию из списка:', reply_markup=markup)
+            bot.send_message(message.chat.id, 'Select a location from the list:', reply_markup=markup)
     else:
-        bot.send_message(message.chat.id, 'Некорректный ввод')
+        bot.send_message(message.chat.id, 'Invalid input')

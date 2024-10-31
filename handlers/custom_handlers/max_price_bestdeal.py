@@ -9,10 +9,10 @@ def max_price_params(message: Message):
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['price_max_bestdeal'] = message.text
         bot.set_state(message.from_user.id, UserInfoState.distance, message.chat.id)
-        bot.send_message(message.chat.id, 'Макс цена записана, введите растояние от центра в км ')
+        bot.send_message(message.chat.id, 'Max price recorded, enter distance from center in km ')
 
     else:
-        bot.send_message(message.chat.id, 'Некоректное значение ')
+        bot.send_message(message.chat.id, 'Incorrect value ')
 
 
 
