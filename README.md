@@ -94,3 +94,16 @@ hotels_params.py: Transfers user-entered data and parses hotel information, incl
 hotel_information.py: Retrieves hotel information, such as links, photos, and location.
 
 set_bot_commands.py: Defines commands for the bot.
+
+
+
+
+Example
+
+
+
+<img width="568" height="803" alt="Снимок экрана 2026-09-23 в 13 48 41" src="https://github.com/user-attachments/assets/81ce88ff-77d8-44e7-82e4-7300b3e1a5ea" />
+<img width="572" height="805" alt="Снимок экрана 2026-09-23 в 13 48 01" src="https://github.com/user-attachments/assets/edcafae1-7af4-40b4-b769-d46be5914b33" />
+<img width="482" height="823" alt="Снимок экрана 2026-09-23 в 13 49 08" src="https://github.com/user-attachments/assets/afd9c9fd-7986-4922-9b32-d4602bd610df" />
+
+
